@@ -305,7 +305,7 @@ export function AdminPage() {
         description="Manage StudentExchange courses, project approvals, hardware listings, competitions, and events."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 space-y-8">
         <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700">

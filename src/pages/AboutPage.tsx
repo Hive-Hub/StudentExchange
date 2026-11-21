@@ -10,7 +10,7 @@ export function AboutPage() {
       />
 
       <section className="border-b border-slate-200 py-14 lg:py-20 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <p className="text-sm font-semibold text-blue-700">About StudentExchange</p>
           <h1 className="font-display text-3xl sm:text-5xl font-bold text-slate-950 tracking-tight mt-3">
             Learn. Build. Exchange. Grow.
@@ -22,7 +22,7 @@ export function AboutPage() {
       </section>
 
       <section className="py-14 lg:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="rounded-xl border border-slate-200 p-6">
               <h2 className="font-display text-xl font-bold text-slate-900">
@@ -55,6 +55,29 @@ export function AboutPage() {
               <p className="text-sm text-slate-600 mt-3 leading-relaxed">
                 Sample catalog listings and platform statistics are clearly labeled as demonstration data and are fully editable through the protected Content Admin console without modifying source code.
               </p>
+            </div>
+          </div>
+
+          {/* Campus Leadership & AWS Student Builder Group */}
+          <div className="rounded-2xl bg-slate-950 text-white border border-slate-800 p-6 sm:p-8 space-y-6">
+            <div>
+              <p className="text-xs font-semibold text-orange-400">
+                Campus Leadership · AWS Student Builder Group
+              </p>
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-white mt-2">
+                AWS Student Builder Group Leader — QIS College of Engineering and Technology
+              </h2>
+              <p className="text-sm text-slate-300 mt-2.5 leading-relaxed">
+                Led by Sekhar Thirupathi, our student-led AWS Student Builder Group initiative connects learners through cloud workshops, AI sessions, peer collaboration, and community impact.
+              </p>
+            </div>
+            <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
+              <img
+                src="/assets/aistudio/Screenshot_2026-10-31_080355_0512b844.png"
+                alt="Sekhar Thirupathi selected as an AWS Student Builder Group Leader at QIS College of Engineering and Technology — Learn, Build, Collaborate, Create Impact."
+                referrerPolicy="no-referrer"
+                className="w-full h-auto block"
+              />
             </div>
           </div>
 

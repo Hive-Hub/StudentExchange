@@ -20,7 +20,7 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 h-16 flex items-center justify-between gap-3 sm:gap-6">
         {/* Zone 1: Brand Logo */}
         <Link
           to="/"

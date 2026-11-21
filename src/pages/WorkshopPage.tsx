@@ -56,7 +56,7 @@ export function WorkshopPage({
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <p className="text-sm font-semibold text-orange-600">Hands-On Practical Sessions</p>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight mt-2">
@@ -75,7 +75,7 @@ export function WorkshopPage({
           </button>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 mt-6">
           <div className="inline-flex flex-wrap gap-1.5 p-1.5 bg-slate-100 rounded-xl">
             {(['All', 'AWS Builder Labs', 'Hardware & Maker', 'Open Tech'] as const).map((tab) => (
               <button
@@ -95,7 +95,7 @@ export function WorkshopPage({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12 space-y-12">
         {error && <ErrorBanner message={error} onRetry={loadWorkshops} />}
 
         {loading ? (

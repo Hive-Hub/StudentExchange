@@ -61,7 +61,7 @@ export function LearningPage() {
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight">
             Learning Hub
           </h1>
@@ -156,7 +156,7 @@ export function LearningPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12">
         {error && <ErrorBanner message={error} onRetry={fetchLearning} />}
         {loading ? (
           <LoadingGrid count={6} />

@@ -78,19 +78,19 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 1: Hero */}
       <section className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-14 lg:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center">
               <p className="text-sm font-semibold text-blue-700 tracking-tight">
                 StudentExchange · Learn. Build. Exchange. Grow.
               </p>
               <h1
-                className="font-display font-extrabold text-slate-950 tracking-tight mt-3 max-w-xl leading-[1.08]"
+                className="font-display font-extrabold text-slate-950 tracking-tight mt-3 max-w-2xl leading-[1.08]"
                 style={{ fontSize: 'clamp(2.25rem, 4vw, 3.65rem)' }}
               >
                 Your Ideas Deserve a Place to Grow.
               </h1>
-              <p className="text-base sm:text-lg text-slate-600 mt-5 leading-relaxed max-w-xl">
+              <p className="text-base sm:text-lg text-slate-600 mt-5 leading-relaxed max-w-2xl">
                 Discover free learning paths, join structured student bootcamps, attend hands-on technical workshops, and connect with peer-led engineering communities.
               </p>
 
@@ -144,14 +144,14 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
       </section>
 
       {error && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 mt-8">
           <ErrorBanner message={error} onRetry={loadOverview} />
         </div>
       )}
 
       {/* Section 2: Upcoming Events Cards */}
       <section className="py-16 lg:py-20 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -295,7 +295,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 3: Past Events & Session Recaps */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -382,7 +382,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 4: Event Formats, Bootcamps & Hosting */}
       <section className="py-16 lg:py-20 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -487,7 +487,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 6: Hands-On Technical Workshops */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -599,7 +599,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 7: AWS Student Builder Community */}
       <section className="py-16 lg:py-20 bg-slate-950 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center">
               <div className="inline-flex items-center gap-2 text-xs font-semibold text-orange-400">
@@ -647,13 +647,15 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex">
-              <MediaFrame
-                src="/src/assets/images/aws_cloud_builders_1795281329492.jpg"
-                alt="Student builders presenting cloud architecture diagrams during a student-led technical workshop"
-                aspectClass="aspect-[16/9] lg:aspect-auto"
-                className="w-full h-full rounded-2xl border border-slate-800"
-              />
+            <div className="lg:col-span-6 flex items-center">
+              <div className="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900">
+                <img
+                  src="/assets/aistudio/Screenshot_2026-10-31_080355_0512b844.png"
+                  alt="Sekhar Thirupathi selected as an AWS Student Builder Group Leader at QIS College of Engineering and Technology — Building a stronger student community through cloud, AI, and innovation."
+                  referrerPolicy="no-referrer"
+                  className="w-full h-auto block"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -661,7 +663,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 8: How StudentExchange Works */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
           <div className="max-w-xl">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
               How StudentExchange Works

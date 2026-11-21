@@ -41,7 +41,7 @@ export function CommunityPage({
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight">
               Student Communities & Events
@@ -68,7 +68,7 @@ export function CommunityPage({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-14">
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12 space-y-14">
         {/* Student Circles */}
         <section>
           <h2 className="font-display text-2xl font-bold text-slate-950">Active Student Circles</h2>
