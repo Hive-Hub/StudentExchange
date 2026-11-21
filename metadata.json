@@ -1,0 +1,6 @@
+{
+  "name": "StudentExchange",
+  "description": "Learn. Build. Exchange. Grow. A public student technology platform to discover free learning resources, explore student-built projects, exchange hardware, find competitions, and join student-led cloud builder communities.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
