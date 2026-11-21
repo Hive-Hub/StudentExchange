@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-do
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { JoinCommunityModal } from './components/JoinCommunityModal';
+import { CustomCursor } from './components/CustomCursor';
 import { HomePage } from './pages/HomePage';
 import { ExplorePage } from './pages/ExplorePage';
 import { LearningPage } from './pages/LearningPage';
@@ -56,6 +57,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <CustomCursor />
       <ScrollToTop />
       <div className="min-h-screen flex flex-col bg-white text-slate-900">
         <Navbar onOpenJoinModal={() => openJoin()} />

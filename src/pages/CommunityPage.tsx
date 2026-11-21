@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ExternalLink, MapPin, ArrowRight } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
-import { ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { LoadingGrid } from '../components/StateFeedback';
+import { publicEventsCatalog } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { CommunityEvent } from '../types';
 
 export function CommunityPage({
@@ -12,21 +14,15 @@ export function CommunityPage({
 }) {
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function loadCommunity() {
     setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/community');
-      if (!res.ok) throw new Error('Failed to load community events.');
-      const data = (await res.json()) as { events: CommunityEvent[] };
-      setEvents(data.events);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error.');
-    } finally {
-      setLoading(false);
-    }
+    const { data } = await fetchApiJsonWithFallback<{ events: CommunityEvent[] }>(
+      '/api/community',
+      { events: publicEventsCatalog }
+    );
+    setEvents(data.events?.length ? data.events : publicEventsCatalog);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -75,7 +71,7 @@ export function CommunityPage({
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="rounded-xl border border-slate-200 bg-white p-6 flex flex-col justify-between">
               <div>
-                <p className="text-xs font-semibold text-orange-600">Student-Led Cloud Group</p>
+                <p className="text-xs font-semibold text-[#C2410C]">Student-Led Cloud Group</p>
                 <h3 className="font-display text-lg font-bold text-slate-900 mt-2">
                   AWS Student Builder Community
                 </h3>
@@ -85,7 +81,7 @@ export function CommunityPage({
               </div>
               <Link
                 to="/aws-builders"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#C2410C] hover:text-orange-800"
               >
                 Explore Activities <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
@@ -137,7 +133,6 @@ export function CommunityPage({
           </p>
 
           <div className="mt-6">
-            {error && <ErrorBanner message={error} onRetry={loadCommunity} />}
             {loading ? (
               <LoadingGrid count={3} />
             ) : (
@@ -151,7 +146,7 @@ export function CommunityPage({
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500">
                         <span
                           className={
-                            ev.is_aws_initiative ? 'text-orange-600 font-semibold' : 'text-blue-700 font-semibold'
+                            ev.is_aws_initiative ? 'text-[#C2410C] font-semibold' : 'text-blue-700 font-semibold'
                           }
                         >
                           {ev.community_group}
@@ -161,7 +156,7 @@ export function CommunityPage({
                         {ev.is_demo === 1 && (
                           <>
                             <span aria-hidden="true">·</span>
-                            <span className="text-slate-400">Demo Event</span>
+                            <span className="text-[#64748B]">Demo Event</span>
                           </>
                         )}
                       </div>

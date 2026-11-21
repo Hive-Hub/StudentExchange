@@ -97,7 +97,14 @@ async function startServer() {
 
   app.use('/api', (req, res, next) => {
     const origin = req.headers.origin;
-    if (origin && (allowedOrigins.includes('*') || allowedOrigins.includes(origin))) {
+    const isPublicRead = req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS';
+    const isAllowedOrigin =
+      origin &&
+      (allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin) ||
+        (allowedOrigins.length === 0 && isPublicRead));
+
+    if (isAllowedOrigin && origin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Vary', 'Origin');
       res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -168,6 +175,9 @@ async function startServer() {
       )
       .all();
     const competitions = db.prepare('SELECT * FROM competitions ORDER BY id ASC LIMIT 6').all();
+    const workshops = db
+      .prepare("SELECT * FROM competitions WHERE type = 'Workshops' ORDER BY id ASC LIMIT 6")
+      .all();
     const awsResources = db
       .prepare('SELECT * FROM aws_learning_resources ORDER BY id ASC LIMIT 4')
       .all();
@@ -178,6 +188,7 @@ async function startServer() {
       learning,
       projects,
       competitions,
+      workshops,
       awsResources,
       events,
     });

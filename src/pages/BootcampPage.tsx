@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { ArrowUpRight, Clock, Layers } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { MediaFrame } from '../components/MediaFrame';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { publicLearningHighlights } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { LearningResource } from '../types';
 
 const trackFilters = ['All', 'Web Development', 'Cloud & AWS', 'AI & Machine Learning', 'Embedded & IoT'];
@@ -24,21 +26,15 @@ export function BootcampPage({
   const [items, setItems] = useState<LearningResource[]>([]);
   const [track, setTrack] = useState('All');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function loadBootcamps() {
     setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/learning');
-      if (!res.ok) throw new Error('Failed to load bootcamp tracks.');
-      const data = (await res.json()) as { items: LearningResource[] };
-      setItems(data.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to fetch bootcamps.');
-    } finally {
-      setLoading(false);
-    }
+    const { data } = await fetchApiJsonWithFallback<{ items: LearningResource[] }>(
+      '/api/learning',
+      { items: publicLearningHighlights }
+    );
+    setItems(data.items?.length ? data.items : publicLearningHighlights);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -95,7 +91,6 @@ export function BootcampPage({
       </section>
 
       <div className="site-container py-12">
-        {error && <ErrorBanner message={error} onRetry={loadBootcamps} />}
         {loading ? (
           <LoadingGrid count={6} />
         ) : filtered.length === 0 ? (

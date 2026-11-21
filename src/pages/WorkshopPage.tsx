@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Calendar, ExternalLink, MapPin } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { publicEventsCatalog, publicWorkshopCompetitions } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { CommunityEvent, Competition } from '../types';
 
 export function WorkshopPage({
@@ -13,28 +15,23 @@ export function WorkshopPage({
   const [workshopPrograms, setWorkshopPrograms] = useState<Competition[]>([]);
   const [filter, setFilter] = useState<'All' | 'AWS Builder Labs' | 'Build Clinics & Sprints' | 'Open Tech'>('All');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function loadWorkshops() {
     setLoading(true);
-    setError('');
-    try {
-      const [evRes, compRes] = await Promise.all([
-        fetch('/api/community'),
-        fetch('/api/competitions?type=Workshops'),
-      ]);
-      if (!evRes.ok || !compRes.ok) {
-        throw new Error('Failed to load workshops.');
-      }
-      const evData = (await evRes.json()) as { events: CommunityEvent[] };
-      const compData = (await compRes.json()) as { items: Competition[] };
-      setEvents(evData.events);
-      setWorkshopPrograms(compData.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error.');
-    } finally {
-      setLoading(false);
-    }
+    const [evResult, compResult] = await Promise.all([
+      fetchApiJsonWithFallback<{ events: CommunityEvent[] }>('/api/community', {
+        events: publicEventsCatalog,
+      }),
+      fetchApiJsonWithFallback<{ items: Competition[] }>(
+        '/api/competitions?type=Workshops',
+        { items: publicWorkshopCompetitions }
+      ),
+    ]);
+    setEvents(evResult.data.events?.length ? evResult.data.events : publicEventsCatalog);
+    setWorkshopPrograms(
+      compResult.data.items?.length ? compResult.data.items : publicWorkshopCompetitions
+    );
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -64,7 +61,7 @@ export function WorkshopPage({
       <section className="bg-white border-b border-slate-200 py-12">
         <div className="site-container flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
-            <p className="text-sm font-semibold text-orange-600">Hands-On Practical Sessions</p>
+            <p className="text-sm font-semibold text-[#C2410C]">Hands-On Practical Sessions</p>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight mt-2">
               Technical Workshops
             </h1>
@@ -102,8 +99,6 @@ export function WorkshopPage({
       </section>
 
       <div className="site-container py-12 space-y-12">
-        {error && <ErrorBanner message={error} onRetry={loadWorkshops} />}
-
         {loading ? (
           <LoadingGrid count={4} />
         ) : filteredEvents.length === 0 && workshopPrograms.length === 0 ? (
@@ -130,7 +125,7 @@ export function WorkshopPage({
                           <span
                             className={
                               ev.is_aws_initiative
-                                ? 'text-orange-600 font-semibold'
+                                ? 'text-[#C2410C] font-semibold'
                                 : 'text-blue-700 font-semibold'
                             }
                           >
@@ -141,7 +136,7 @@ export function WorkshopPage({
                           {ev.is_demo === 1 && (
                             <>
                               <span aria-hidden="true">·</span>
-                              <span className="text-slate-400">Demo</span>
+                              <span className="text-[#64748B]">Demo</span>
                             </>
                           )}
                         </div>

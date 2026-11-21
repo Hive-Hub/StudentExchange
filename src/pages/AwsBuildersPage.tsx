@@ -2,8 +2,41 @@ import { useEffect, useState } from 'react';
 import { Cloud, ExternalLink, Calendar, MapPin } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { MediaFrame } from '../components/MediaFrame';
-import { ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { fetchApiJsonWithFallback } from '../lib/api';
+import { publicEventsCatalog } from '../data/fallbackCatalog';
 import type { AWSLearningResource, CommunityEvent } from '../types';
+
+const fallbackAwsResources: AWSLearningResource[] = [
+  {
+    id: 1,
+    title: 'Serverless REST APIs with Lambda & API Gateway',
+    level: 'Foundational',
+    service_focus: 'AWS Lambda · API Gateway · IAM',
+    duration: '3 Hours Lab',
+    format: 'Hands-On Workshop',
+    description:
+      'Build and deploy a student study-group API using serverless functions, least-privilege IAM policies, and structured logging.',
+    resource_url: 'https://explore.skillbuilder.aws/',
+    is_student_led: 1,
+    is_demo: 0,
+    created_at: '2026-11-01T00:00:00Z',
+  },
+  {
+    id: 2,
+    title: 'Static Web Hosting, CloudFront & Custom CI/CD Pipelines',
+    level: 'Builder Lab',
+    service_focus: 'Amazon S3 · CloudFront · GitHub Actions',
+    duration: '2.5 Hours Lab',
+    format: 'Guided Study Jam',
+    description:
+      'Deploy fast Vite + React student portfolios globally with automated build previews, caching headers, and HTTPS.',
+    resource_url: 'https://aws.amazon.com/getting-started/',
+    is_student_led: 1,
+    is_demo: 0,
+    created_at: '2026-11-01T00:00:00Z',
+  },
+];
 
 export function AwsBuildersPage({
   onOpenJoinModal,
@@ -13,25 +46,20 @@ export function AwsBuildersPage({
   const [resources, setResources] = useState<AWSLearningResource[]>([]);
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function loadAwsData() {
     setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/aws-builders');
-      if (!res.ok) throw new Error('Failed to load AWS Student Builder resources.');
-      const data = (await res.json()) as {
-        resources: AWSLearningResource[];
-        events: CommunityEvent[];
-      };
-      setResources(data.resources);
-      setEvents(data.events);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to fetch AWS Builder data.');
-    } finally {
-      setLoading(false);
-    }
+    const awsFallbackEvents = publicEventsCatalog.filter((ev) => ev.is_aws_initiative === 1);
+    const { data } = await fetchApiJsonWithFallback<{
+      resources: AWSLearningResource[];
+      events: CommunityEvent[];
+    }>('/api/aws-builders', {
+      resources: fallbackAwsResources,
+      events: awsFallbackEvents,
+    });
+    setResources(data.resources);
+    setEvents(data.events);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -88,7 +116,6 @@ export function AwsBuildersPage({
       </section>
 
       <div id="aws-paths" className="site-container py-14 space-y-14">
-        {error && <ErrorBanner message={error} onRetry={loadAwsData} />}
 
         <section>
           <h2 className="font-display text-2xl font-bold text-slate-950">
@@ -110,7 +137,7 @@ export function AwsBuildersPage({
                   >
                     <div>
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500">
-                        <span className="text-orange-600 font-semibold">{item.level}</span>
+                        <span className="text-[#C2410C] font-semibold">{item.level}</span>
                         <span aria-hidden="true">·</span>
                         <span>{item.format}</span>
                         <span aria-hidden="true">·</span>
@@ -118,7 +145,7 @@ export function AwsBuildersPage({
                         {item.is_demo === 1 && (
                           <>
                             <span aria-hidden="true">·</span>
-                            <span className="text-slate-400">Demo</span>
+                            <span className="text-[#64748B]">Demo</span>
                           </>
                         )}
                       </div>
@@ -140,7 +167,7 @@ export function AwsBuildersPage({
                         href={item.resource_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C2410C] hover:text-orange-800"
                       >
                         <span>Start Lab</span>
                         <ExternalLink className="w-4 h-4" aria-hidden="true" />
@@ -157,16 +184,25 @@ export function AwsBuildersPage({
           <h2 className="font-display text-2xl font-bold text-slate-950">
             Student-Led Technical Sessions & Workshops
           </h2>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {events.map((ev) => (
-              <article
-                key={ev.id}
-                className="rounded-xl border border-slate-200 bg-white p-6 flex flex-col justify-between"
-              >
-                <div>
-                  <p className="text-xs font-semibold text-orange-600">
-                    {ev.community_group} · {ev.event_type}
-                  </p>
+          {events.length === 0 ? (
+            <div className="mt-6">
+              <EmptyState
+                icon={Cloud}
+                title="No AWS Builder sessions scheduled yet"
+                description="Check back soon for upcoming student-led study jams and workshops."
+              />
+            </div>
+          ) : (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {events.map((ev) => (
+                <article
+                  key={ev.id}
+                  className="rounded-xl border border-slate-200 bg-white p-6 flex flex-col justify-between"
+                >
+                  <div>
+                    <p className="text-xs font-semibold text-[#C2410C]">
+                      {ev.community_group} · {ev.event_type}
+                    </p>
                   <h3 className="font-display text-lg font-bold text-slate-900 mt-2">{ev.title}</h3>
                   <p className="text-sm text-slate-600 mt-2 leading-relaxed">{ev.description}</p>
                 </div>
@@ -192,9 +228,10 @@ export function AwsBuildersPage({
                     </a>
                   )}
                 </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>

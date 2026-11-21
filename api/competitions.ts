@@ -1,5 +1,15 @@
 import { publicWorkshopCompetitions } from '../src/data/fallbackCatalog';
 
+const corsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, OPTIONS',
+  'access-control-allow-headers': 'Content-Type, Authorization',
+};
+
+export function OPTIONS(): Response {
+  return new Response(null, { status: 204, headers: corsHeaders });
+}
+
 export function GET(request: Request): Response {
   const url = new URL(request.url);
   const type = (url.searchParams.get('type') || '').trim();
@@ -18,6 +28,7 @@ export function GET(request: Request): Response {
   return new Response(JSON.stringify({ items }), {
     status: 200,
     headers: {
+      ...corsHeaders,
       'content-type': 'application/json; charset=utf-8',
       'cache-control': 'public, s-maxage=60, stale-while-revalidate=300',
     },

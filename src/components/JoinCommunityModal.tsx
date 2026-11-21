@@ -64,7 +64,7 @@ export function JoinCommunityModal({
       <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-6 shadow-xl">
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
           <div>
-            <p className="text-xs font-medium text-orange-600">Open Student Community</p>
+            <p className="text-xs font-semibold text-[#C2410C]">Open Student Community</p>
             <h2 id="join-community-title" className="font-display text-lg font-bold text-slate-900 mt-1">
               Join StudentExchange Communities
             </h2>

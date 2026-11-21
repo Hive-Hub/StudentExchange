@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { LearningCard } from '../components/ResourceCards';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { publicLearningHighlights } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { LearningResource } from '../types';
 
 const categories = [
@@ -27,26 +29,37 @@ export function LearningPage() {
   const [freeFilter, setFreeFilter] = useState<'all' | 'free' | 'paid'>('all');
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function fetchLearning() {
     setLoading(true);
-    setError('');
-    try {
-      const params = new URLSearchParams();
-      if (category !== 'All') params.set('category', category);
-      if (difficulty !== 'All') params.set('difficulty', difficulty);
-      if (freeFilter !== 'all') params.set('free', freeFilter);
-      if (query.trim()) params.set('q', query.trim());
-      const res = await fetch(`/api/learning?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to load learning resources.');
-      const data = (await res.json()) as { items: LearningResource[] };
-      setItems(data.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error.');
-    } finally {
-      setLoading(false);
-    }
+    const params = new URLSearchParams();
+    if (category !== 'All') params.set('category', category);
+    if (difficulty !== 'All') params.set('difficulty', difficulty);
+    if (freeFilter !== 'all') params.set('free', freeFilter);
+    if (query.trim()) params.set('q', query.trim());
+
+    const fallbackItems = publicLearningHighlights.filter((item) => {
+      if (category !== 'All' && item.category !== category) return false;
+      if (difficulty !== 'All' && item.difficulty !== difficulty) return false;
+      if (freeFilter === 'free' && item.is_free !== 1) return false;
+      if (freeFilter === 'paid' && item.is_free !== 0) return false;
+      if (query.trim()) {
+        const q = query.trim().toLowerCase();
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.description.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+
+    const { data } = await fetchApiJsonWithFallback<{ items: LearningResource[] }>(
+      `/api/learning?${params.toString()}`,
+      { items: fallbackItems }
+    );
+    setItems(data.items || fallbackItems);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -157,7 +170,6 @@ export function LearningPage() {
       </section>
 
       <div className="site-container py-12">
-        {error && <ErrorBanner message={error} onRetry={fetchLearning} />}
         {loading ? (
           <LoadingGrid count={6} />
         ) : items.length === 0 ? (

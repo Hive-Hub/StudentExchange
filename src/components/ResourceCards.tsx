@@ -12,17 +12,17 @@ export function LearningCard({ item }: { item: LearningResource }) {
       <MediaFrame src={item.image_url} alt={item.title} aspectClass="aspect-[4/3]" />
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500">
-          <span className="text-blue-700 font-semibold">{item.category}</span>
+          <span className="text-[var(--color-blue)] font-semibold">{item.category}</span>
           <span aria-hidden="true">·</span>
           <span>{item.difficulty}</span>
           <span aria-hidden="true">·</span>
-          <span className={item.is_free ? 'text-emerald-700 font-semibold' : 'text-slate-700'}>
+          <span className={item.is_free ? 'text-[var(--color-teal-text)] font-semibold' : 'text-[var(--color-navy)] font-semibold'}>
             {item.price_label}
           </span>
           {item.is_demo === 1 && (
             <>
               <span aria-hidden="true">·</span>
-              <span className="text-slate-400">Demo</span>
+              <span className="text-[var(--color-muted)]">Demo</span>
             </>
           )}
         </div>
@@ -58,14 +58,14 @@ export function ProjectCard({ item }: { item: StudentProject }) {
     <article className="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-slate-300 transition-colors duration-150">
       <MediaFrame src={item.image_url} alt={item.title} aspectClass="aspect-[4/3]" />
       <div className="p-5 flex-1 flex flex-col">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500">
-          <span className="text-blue-700 font-semibold">{item.category}</span>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-[var(--color-text)]">
+          <span className="text-[var(--color-violet)] font-semibold">{item.category}</span>
           <span aria-hidden="true">·</span>
           <span>{item.author_name}</span>
           {item.is_demo === 1 && (
             <>
               <span aria-hidden="true">·</span>
-              <span className="text-slate-400">Demo</span>
+              <span className="text-[var(--color-muted)]">Demo</span>
             </>
           )}
         </div>
@@ -93,7 +93,7 @@ export function ProjectCard({ item }: { item: StudentProject }) {
               <span>GitHub</span>
             </a>
           ) : (
-            <span className="text-slate-400">Private Repo</span>
+            <span className="text-[var(--color-muted)]">Private Repo</span>
           )}
           {item.demo_url && (
             <a
@@ -115,14 +115,14 @@ export function ProjectCard({ item }: { item: StudentProject }) {
 export function CompetitionCard({ item }: { item: Competition }) {
   return (
     <article className="flex flex-col rounded-xl border border-slate-200 bg-white p-6 hover:border-slate-300 transition-colors duration-150">
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-slate-500">
-        <span className="text-blue-700 font-semibold">{item.type}</span>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-[var(--color-text)]">
+        <span className="text-[var(--color-teal-text)] font-semibold">{item.type}</span>
         <span aria-hidden="true">·</span>
         <span>{item.location}</span>
         {item.is_demo === 1 && (
           <>
             <span aria-hidden="true">·</span>
-            <span className="text-slate-400">Demo</span>
+            <span className="text-[var(--color-muted)]">Demo</span>
           </>
         )}
       </div>
