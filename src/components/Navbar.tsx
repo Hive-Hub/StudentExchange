@@ -20,18 +20,18 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
         {/* Zone 1: Brand Logo */}
         <Link
           to="/"
           aria-label="StudentExchange Home"
-          className="inline-flex items-center bg-slate-950 px-3 py-1 rounded-lg shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
+          className="relative inline-flex items-center h-9 w-[148px] sm:h-11 sm:w-[182px] overflow-hidden shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
         >
           <img
             src="/assets/aistudio/StudentExchange_Tech_Learning_Logo_ddc49316.png"
             alt="StudentExchange — Learn. Build. Exchange. Grow."
             referrerPolicy="no-referrer"
-            className="h-10 w-auto object-contain"
+            className="w-[108%] max-w-none h-auto absolute left-1/2 top-1/2 -translate-x-[50.4%] -translate-y-[46.5%] invert hue-rotate-180 saturate-125 brightness-105 contrast-105"
           />
         </Link>
 
