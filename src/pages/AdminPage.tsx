@@ -6,7 +6,6 @@ import type {
   CommunityEvent,
   Competition,
   ContactSubmission,
-  HardwareListing,
   LearningResource,
   PlatformStat,
   StudentProject,
@@ -16,7 +15,6 @@ interface DashboardData {
   stats: PlatformStat[];
   learning: LearningResource[];
   projects: StudentProject[];
-  hardware: HardwareListing[];
   competitions: Competition[];
   events: CommunityEvent[];
   awsResources: AWSLearningResource[];
@@ -27,7 +25,6 @@ type AdminTab =
   | 'stats'
   | 'projects'
   | 'learning'
-  | 'hardware'
   | 'competitions'
   | 'community'
   | 'submissions';
@@ -58,17 +55,6 @@ export function AdminPage() {
     provider: 'StudentExchange',
     duration: '4 Weeks',
     resource_url: '',
-  });
-  const [newHardware, setNewHardware] = useState({
-    title: '',
-    category: 'Arduino boards',
-    listing_type: 'Exchange',
-    condition: 'Like New',
-    price_label: 'Swap / Offer',
-    location: '',
-    seller_name: '',
-    description: '',
-    specs: '',
   });
   const [newComp, setNewComp] = useState({
     title: '',
@@ -302,10 +288,10 @@ export function AdminPage() {
     <div className="bg-slate-50 min-h-screen py-10">
       <SeoHead
         title="Admin Console"
-        description="Manage StudentExchange courses, project approvals, hardware listings, competitions, and events."
+        description="Manage StudentExchange courses, project approvals, competitions, and events."
       />
 
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 space-y-8">
+      <div className="site-container space-y-8">
         <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700">
@@ -339,7 +325,6 @@ export function AdminPage() {
               { id: 'stats', label: 'Platform Stats' },
               { id: 'projects', label: `Projects (${data?.projects.length ?? 0})` },
               { id: 'learning', label: `Learning (${data?.learning.length ?? 0})` },
-              { id: 'hardware', label: `Hardware (${data?.hardware.length ?? 0})` },
               { id: 'competitions', label: `Competitions (${data?.competitions.length ?? 0})` },
               { id: 'community', label: `Events & AWS (${data?.events.length ?? 0})` },
               { id: 'submissions', label: `Inbox (${data?.submissions.length ?? 0})` },
@@ -372,7 +357,7 @@ export function AdminPage() {
                     Editable Platform Statistics
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
-                    Update the four homepage counters directly without changing frontend code.
+                    Update the homepage counters directly without changing frontend code.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -597,148 +582,6 @@ export function AdminPage() {
                         }
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
                         aria-label={`Delete ${l.title}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Hardware Listings */}
-            {tab === 'hardware' && (
-              <div className="space-y-6">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    void adminFetch('/api/admin/hardware', {
-                      method: 'POST',
-                      body: JSON.stringify(newHardware),
-                    });
-                    setNewHardware({
-                      title: '',
-                      category: 'Arduino boards',
-                      listing_type: 'Exchange',
-                      condition: 'Like New',
-                      price_label: 'Swap / Offer',
-                      location: '',
-                      seller_name: '',
-                      description: '',
-                      specs: '',
-                    });
-                  }}
-                  className="bg-white rounded-xl border border-slate-200 p-6 space-y-4"
-                >
-                  <h2 className="font-display text-lg font-bold text-slate-900">
-                    Add Hardware Listing
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input
-                      type="text"
-                      required
-                      placeholder="Component name"
-                      value={newHardware.title}
-                      onChange={(e) => setNewHardware({ ...newHardware, title: e.target.value })}
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg"
-                    />
-                    <select
-                      value={newHardware.listing_type}
-                      onChange={(e) =>
-                        setNewHardware({ ...newHardware, listing_type: e.target.value })
-                      }
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg bg-white"
-                    >
-                      {['Buy', 'Sell', 'Exchange', 'Donate'].map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Price or exchange terms"
-                      value={newHardware.price_label}
-                      onChange={(e) =>
-                        setNewHardware({ ...newHardware, price_label: e.target.value })
-                      }
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      required
-                      placeholder="Location (e.g. Campus Lab)"
-                      value={newHardware.location}
-                      onChange={(e) => setNewHardware({ ...newHardware, location: e.target.value })}
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      required
-                      placeholder="Seller name"
-                      value={newHardware.seller_name}
-                      onChange={(e) =>
-                        setNewHardware({ ...newHardware, seller_name: e.target.value })
-                      }
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg"
-                    />
-                    <select
-                      value={newHardware.category}
-                      onChange={(e) =>
-                        setNewHardware({ ...newHardware, category: e.target.value })
-                      }
-                      className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg bg-white"
-                    >
-                      {[
-                        'Arduino boards',
-                        'ESP32 and ESP8266',
-                        'Raspberry Pi',
-                        'Sensors',
-                        'Electronic modules',
-                        'Development boards',
-                        'Robotics components',
-                      ].map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <textarea
-                    required
-                    rows={2}
-                    placeholder="Component details and included accessories"
-                    value={newHardware.description}
-                    onChange={(e) =>
-                      setNewHardware({ ...newHardware, description: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg"
-                  />
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" /> Add Hardware Listing
-                  </button>
-                </form>
-
-                <div className="bg-white rounded-xl border border-slate-200 p-6 divide-y divide-slate-100">
-                  {data.hardware.map((h) => (
-                    <div key={h.id} className="py-3 flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-xs text-slate-500">
-                          {h.listing_type} · {h.category} · {h.price_label} · {h.location}
-                        </p>
-                        <p className="text-sm font-bold text-slate-900">{h.title}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          void adminFetch(`/api/admin/hardware/${h.id}`, { method: 'DELETE' })
-                        }
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
-                        aria-label={`Delete ${h.title}`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -976,7 +819,7 @@ export function AdminPage() {
             {tab === 'submissions' && (
               <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
                 <h2 className="font-display text-lg font-bold text-slate-900">
-                  Contact, Hardware Inquiries & Community Joins
+                  Contact & Community Joins
                 </h2>
                 {data.submissions.length === 0 ? (
                   <p className="text-sm text-slate-500 py-6">No submissions recorded yet.</p>

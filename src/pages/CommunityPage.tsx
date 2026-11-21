@@ -41,13 +41,13 @@ export function CommunityPage({
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="site-container flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight">
               Student Communities & Events
             </h1>
             <p className="text-base text-slate-600 mt-2 max-w-2xl">
-              Join peer-led workshops, hardware swap meets, demo days, and technical study jams across partner student groups.
+              Join peer-led workshops, technical bootcamps, demo days, and study jams across partner student groups.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 shrink-0">
@@ -68,7 +68,7 @@ export function CommunityPage({
         </div>
       </section>
 
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12 space-y-14">
+      <div className="site-container py-12 space-y-14">
         {/* Student Circles */}
         <section>
           <h2 className="font-display text-2xl font-bold text-slate-950">Active Student Circles</h2>
@@ -93,19 +93,19 @@ export function CommunityPage({
 
             <div className="rounded-xl border border-slate-200 bg-white p-6 flex flex-col justify-between">
               <div>
-                <p className="text-xs font-semibold text-blue-700">Embedded & Robotics</p>
+                <p className="text-xs font-semibold text-blue-700">Practical Build Labs</p>
                 <h3 className="font-display text-lg font-bold text-slate-900 mt-2">
-                  Hardware & Maker Collective
+                  Hands-On Technical Workshops
                 </h3>
                 <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-                  Campus hardware swap meets, PCB design reviews, soldering clinics, and shared microcontroller libraries.
+                  Weekend build clinics, cloud architecture labs, and guided developer study jams hosted by student organizers.
                 </p>
               </div>
               <Link
-                to="/hardware"
+                to="/workshop"
                 className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800"
               >
-                Browse Hardware <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                Explore Workshops <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
 

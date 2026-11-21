@@ -41,32 +41,6 @@ export interface StudentProject {
   created_at: string;
 }
 
-export interface HardwareListing {
-  id: number;
-  title: string;
-  category:
-    | 'Arduino boards'
-    | 'ESP32 and ESP8266'
-    | 'Raspberry Pi'
-    | 'Sensors'
-    | 'Electronic modules'
-    | 'Development boards'
-    | 'Robotics components';
-  listing_type: 'Buy' | 'Sell' | 'Exchange' | 'Donate';
-  condition: string;
-  price_label: string;
-  exchange_for: string;
-  location: string;
-  seller_name: string;
-  seller_contact_note: string;
-  description: string;
-  specs: string;
-  image_url: string;
-  is_available: number;
-  is_demo: number;
-  created_at: string;
-}
-
 export interface Competition {
   id: number;
   title: string;
@@ -121,7 +95,7 @@ export interface AWSLearningResource {
 
 export interface ContactSubmission {
   id: number;
-  submission_type: 'general' | 'hardware_inquiry' | 'community_join';
+  submission_type: 'general' | 'community_join';
   reference_id: number | null;
   reference_title: string;
   sender_name: string;

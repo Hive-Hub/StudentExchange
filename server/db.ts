@@ -171,16 +171,14 @@ function seedInitialDemoData(): void {
     );
     insertStat.run('learning_resources', 'Learning Resources', '9', 'Free courses & open tracks');
     insertStat.run('student_projects', 'Student Projects', '5', 'Open-source student builds');
-    insertStat.run('hardware_listings', 'Hardware Listings', '6', 'Boards & kits ready to swap');
     insertStat.run('community_events', 'Community Events', '7', 'Workshops & live sessions');
   } else {
     db.exec(`
+      DELETE FROM platform_stats WHERE stat_key = 'hardware_listings';
       UPDATE platform_stats SET note = 'Free courses & open tracks'
         WHERE stat_key = 'learning_resources' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
       UPDATE platform_stats SET note = 'Open-source student builds'
         WHERE stat_key = 'student_projects' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
-      UPDATE platform_stats SET note = 'Boards & kits ready to swap'
-        WHERE stat_key = 'hardware_listings' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
       UPDATE platform_stats SET note = 'Workshops & live sessions'
         WHERE stat_key = 'community_events' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
     `);
@@ -488,13 +486,13 @@ function seedInitialDemoData(): void {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
     `);
     ins.run(
-      'BuildForCampus Hardware & Cloud Hackathon',
+      'BuildForCampus Cloud & Full-Stack Hackathon',
       'Hackathons',
       'StudentExchange & Partner Engineering Clubs',
-      '48-hour interdisciplinary build sprint challenging student teams to pair affordable microcontrollers with resilient cloud backends.',
+      '48-hour interdisciplinary build sprint challenging student teams to build accessible web, AI, and resilient cloud applications.',
       '2026-12-15',
       'Undergraduate & Postgraduate Students (Teams of 2-4)',
-      '$3,500 Hardware Grants + Mentorship',
+      '$3,500 Cloud & Project Grants + Mentorship',
       'https://mlh.io/seasons/2026/events',
       'Hybrid · Campus Hubs & Online'
     );
@@ -502,7 +500,7 @@ function seedInitialDemoData(): void {
       'Student-Led Serverless Architecture Challenge',
       'AWS challenges',
       'AWS Student Builder Group (Student-Led Initiative)',
-      'Design and deploy a cost-efficient serverless web or IoT pipeline using core cloud primitives and present your architecture diagram.',
+      'Design and deploy a cost-efficient serverless web or data pipeline using core cloud primitives and present your architecture diagram.',
       '2026-12-08',
       'All University Builders · Beginner Track Open',
       'Cloud Credits + Showcase Spotlight',
@@ -521,14 +519,14 @@ function seedInitialDemoData(): void {
       'Online'
     );
     ins.run(
-      'Open Hardware & Sustainability Innovation Program',
+      'Open Source & Sustainability Innovation Program',
       'Student innovation programs',
-      'Campus Circular Hardware Collective',
-      'Eight-week cohort supporting student teams turning salvaged sensors and single-board computers into campus sustainability tools.',
+      'Campus Open Innovation Collective',
+      'Eight-week cohort supporting student teams building open-source campus sustainability dashboards and community climate tools.',
       '2027-01-10',
       'Open to All Engineering & Design Majors',
-      'Bench Space + Component Stipend',
-      'https://www.oshwa.org/',
+      'Cloud Credits + Mentorship Stipend',
+      'https://opensource.org/',
       'Regional Partner Campuses'
     );
     ins.run(
@@ -575,15 +573,15 @@ function seedInitialDemoData(): void {
       1
     );
     ins.run(
-      'Hardware Swap Meet & Soldering Clinic',
-      'StudentExchange Maker Collective',
+      'Full-Stack TypeScript & API Build Clinic',
+      'StudentExchange Open Builders',
       'In-Person Workshop & Clinic',
       '2026-12-05 · 14:00 Local',
       'Engineering Atrium · Partner Campuses',
-      'Bring unused Arduinos, breadboards, and sensors to test, trade, or donate to first-year students preparing for winter hackathons.',
-      'Hands-on bench testing · Open to beginners',
-      '/src/assets/images/hardware_kits_workbench_1795281328401.jpg',
-      'https://studentexchange-demo.example.org/swap-meet',
+      'Bring your laptop to design REST APIs, connect database models, and ship a working frontend demo with peer mentors.',
+      'Live code reviews · Open to beginners',
+      '/src/assets/images/learning_cloud_code_1795281329282.jpg',
+      'https://www.typescriptlang.org/docs/',
       0
     );
     ins.run(
@@ -612,7 +610,7 @@ function seedInitialDemoData(): void {
     );
   }
 
-  // Ensure existing upcoming rows have fallback images and seed Past Events if absent
+  // Ensure existing upcoming rows have fallback images and remove hardware wording from seeded events
   db.exec(`
     UPDATE community_events
     SET image_url = '/src/assets/images/aws_cloud_builders_1795281329492.jpg'
@@ -620,6 +618,30 @@ function seedInitialDemoData(): void {
     UPDATE community_events
     SET image_url = '/src/assets/images/hero_student_makers_1795281326782.jpg'
     WHERE (image_url IS NULL OR image_url = '') AND is_aws_initiative = 0;
+    UPDATE community_events
+    SET title = 'Full-Stack TypeScript & API Build Clinic',
+        community_group = 'StudentExchange Open Builders',
+        event_type = 'In-Person Workshop & Clinic',
+        description = 'Bring your laptop to design REST APIs, connect database models, and ship a working frontend demo with peer mentors.',
+        highlight_note = 'Live code reviews · Open to beginners',
+        image_url = '/src/assets/images/learning_cloud_code_1795281329282.jpg',
+        registration_url = 'https://www.typescriptlang.org/docs/'
+    WHERE title = 'Hardware Swap Meet & Soldering Clinic' OR title = 'Full-Stack TypeScript & API Build Clinic';
+    UPDATE community_events
+    SET description = 'Full-day embedded telemetry build clinic where student pairs streamed real-time sensor metrics from ESP32 boards over MQTT.'
+    WHERE description LIKE '%hardware build clinic%';
+    UPDATE competitions
+    SET title = 'BuildForCampus Cloud & Full-Stack Hackathon',
+        description = '48-hour interdisciplinary build sprint challenging student teams to build accessible web, AI, and resilient cloud applications.',
+        prize_or_benefit = '$3,500 Cloud & Project Grants + Mentorship'
+    WHERE title = 'BuildForCampus Hardware & Cloud Hackathon';
+    UPDATE competitions
+    SET title = 'Open Source & Sustainability Innovation Program',
+        organizer = 'Campus Open Innovation Collective',
+        description = 'Eight-week cohort supporting student teams building open-source campus sustainability dashboards and community climate tools.',
+        prize_or_benefit = 'Cloud Credits + Mentorship Stipend',
+        registration_url = 'https://opensource.org/'
+    WHERE title = 'Open Hardware & Sustainability Innovation Program';
   `);
 
   const pastCount = db
@@ -649,7 +671,7 @@ function seedInitialDemoData(): void {
       'Workshop Recap',
       '2026-09-27 · Completed',
       'Robotics Lab · Engineering Block',
-      'Full-day hardware build clinic where student pairs wired ultrasonic sensors to ESP32 boards and streamed live telemetry over MQTT.',
+      'Full-day embedded telemetry build clinic where student pairs streamed real-time sensor metrics from ESP32 boards over MQTT.',
       '28 working prototypes · Schematics & firmware open',
       '/src/assets/images/project_iot_robotics_1795281329280.jpg',
       'https://docs.espressif.com/projects/esp-idf/en/latest/esp32/',

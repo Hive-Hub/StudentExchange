@@ -11,7 +11,7 @@ export function WorkshopPage({
 }) {
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [workshopPrograms, setWorkshopPrograms] = useState<Competition[]>([]);
-  const [filter, setFilter] = useState<'All' | 'AWS Builder Labs' | 'Hardware & Maker' | 'Open Tech'>('All');
+  const [filter, setFilter] = useState<'All' | 'AWS Builder Labs' | 'Build Clinics & Sprints' | 'Open Tech'>('All');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -44,26 +44,32 @@ export function WorkshopPage({
   const filteredEvents = events.filter((ev) => {
     if (filter === 'All') return true;
     if (filter === 'AWS Builder Labs') return ev.is_aws_initiative === 1;
-    if (filter === 'Hardware & Maker') return ev.community_group.toLowerCase().includes('maker');
-    return ev.is_aws_initiative === 0 && !ev.community_group.toLowerCase().includes('maker');
+    if (filter === 'Build Clinics & Sprints') {
+      return (
+        ev.event_type.toLowerCase().includes('sprint') ||
+        ev.event_type.toLowerCase().includes('clinic') ||
+        ev.event_type.toLowerCase().includes('workshop')
+      );
+    }
+    return ev.is_aws_initiative === 0;
   });
 
   return (
     <div className="bg-slate-50 min-h-screen">
       <SeoHead
         title="Workshop"
-        description="Hands-on technical workshops, soldering clinics, and student-led AWS cloud study jams."
+        description="Hands-on technical workshops, engineering build clinics, and student-led AWS cloud study jams."
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="site-container flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <p className="text-sm font-semibold text-orange-600">Hands-On Practical Sessions</p>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight mt-2">
               Technical Workshops
             </h1>
             <p className="text-base text-slate-600 mt-2 max-w-2xl">
-              Weekend build clinics, KiCad PCB labs, and student-led AWS cloud study jams open to all university builders without registration gates.
+              Weekend build clinics, full-stack architecture labs, and student-led AWS cloud study jams open to all university builders without registration gates.
             </p>
           </div>
           <button
@@ -75,9 +81,9 @@ export function WorkshopPage({
           </button>
         </div>
 
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 mt-6">
+        <div className="site-container mt-6">
           <div className="inline-flex flex-wrap gap-1.5 p-1.5 bg-slate-100 rounded-xl">
-            {(['All', 'AWS Builder Labs', 'Hardware & Maker', 'Open Tech'] as const).map((tab) => (
+            {(['All', 'AWS Builder Labs', 'Build Clinics & Sprints', 'Open Tech'] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
@@ -95,7 +101,7 @@ export function WorkshopPage({
         </div>
       </section>
 
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12 space-y-12">
+      <div className="site-container py-12 space-y-12">
         {error && <ErrorBanner message={error} onRetry={loadWorkshops} />}
 
         {loading ? (

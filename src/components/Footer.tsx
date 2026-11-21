@@ -4,7 +4,7 @@ import { ExternalLink } from 'lucide-react';
 export function Footer() {
   return (
     <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-16">
+      <div className="site-container py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Column */}
           <div className="space-y-4">
@@ -17,7 +17,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
-              An open public platform helping students discover free technical courses, showcase engineering work, exchange hardware components, and join peer-led technology communities.
+              An open public platform helping students discover free technical courses, showcase engineering work, join hands-on bootcamps and workshops, and connect with peer-led technology communities.
             </p>
           </div>
 

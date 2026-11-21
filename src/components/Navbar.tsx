@@ -9,7 +9,6 @@ interface NavbarProps {
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Learning', to: '/learning' },
-  { label: 'Exchange', to: '/hardware' },
   { label: 'Bootcamp', to: '/bootcamp' },
   { label: 'Workshop', to: '/workshop' },
   { label: 'Community', to: '/community' },
@@ -21,7 +20,7 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 h-16 flex items-center justify-between gap-4">
+      <div className="site-container h-16 flex items-center justify-between gap-3 sm:gap-4">
         {/* Zone 1: Simplified Brand Mark (Icon + Wordmark, no tagline) */}
         <Link
           to="/"
@@ -63,7 +62,7 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="font-display text-xl font-extrabold tracking-tight text-slate-950 whitespace-nowrap">
+          <span className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 whitespace-nowrap">
             Student<span className="text-orange-600">Exchange</span>
           </span>
         </Link>
@@ -109,7 +108,7 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
             href="https://chat.whatsapp.com/HnDtAQNCmC4CyVCVv8kLnJ"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-orange-600 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="hidden sm:inline-flex px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-orange-600 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             Join Community
           </a>
@@ -127,7 +126,8 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
 
       {/* Responsive Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white px-5 py-4">
+        <div className="lg:hidden border-t border-slate-200 bg-white">
+          <div className="site-container py-4">
           <nav aria-label="Mobile Navigation" className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {navItems.map((item) => (
               <NavLink
@@ -164,6 +164,7 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
             >
               AWS Student Builders
             </Link>
+          </div>
           </div>
         </div>
       )}

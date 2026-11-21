@@ -97,7 +97,7 @@ export function JoinCommunityModal({
         ) : (
           <form onSubmit={handleSubmit} className="mt-5 space-y-4">
             <p className="text-xs text-slate-600">
-              All StudentExchange learning materials and listings remain open without registration. Share your details if you would like invites to student-led workshops and study jams.
+              All StudentExchange learning materials and resources remain open without registration. Share your details if you would like invites to student-led workshops and study jams.
             </p>
 
             {error && (
@@ -157,7 +157,7 @@ export function JoinCommunityModal({
                   <option value="AWS Student Builder Community (Student-Led)">
                     AWS Student Builder Community
                   </option>
-                  <option value="Hardware & Robotics Collective">Hardware & Robotics Collective</option>
+                  <option value="Web & Cloud Builders Collective">Web & Cloud Builders Collective</option>
                   <option value="AI/ML & Open Source Study Group">AI/ML & Open Source</option>
                 </select>
               </div>

@@ -6,38 +6,38 @@ export function AboutPage() {
     <div className="bg-white min-h-screen">
       <SeoHead
         title="About StudentExchange"
-        description="Learn about StudentExchange's mission to make technical learning, hardware exchange, and project discovery open to every student."
+        description="Learn about StudentExchange's mission to make technical learning, workshops, and project discovery open to every student."
       />
 
       <section className="border-b border-slate-200 py-14 lg:py-20 bg-slate-50">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <p className="text-sm font-semibold text-blue-700">About StudentExchange</p>
           <h1 className="font-display text-3xl sm:text-5xl font-bold text-slate-950 tracking-tight mt-3">
             Learn. Build. Exchange. Grow.
           </h1>
           <p className="text-lg text-slate-600 mt-5 leading-relaxed">
-            StudentExchange is an open public student technology platform designed around one simple observation: students learn fastest when quality educational resources, real project examples, spare hardware components, and welcoming builder communities are accessible without paywalls or mandatory accounts.
+            StudentExchange is an open public student technology platform designed around one simple observation: students learn fastest when quality educational resources, real project examples, structured workshops, and welcoming builder communities are accessible without paywalls or mandatory accounts.
           </p>
         </div>
       </section>
 
       <section className="py-14 lg:py-16">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 space-y-12">
+        <div className="site-container space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="rounded-xl border border-slate-200 p-6">
               <h2 className="font-display text-xl font-bold text-slate-900">
                 Public Access Without Friction
               </h2>
               <p className="text-sm text-slate-600 mt-3 leading-relaxed">
-                Every course directory, student project, hardware listing, and competition deadline on StudentExchange is immediately browsable without signup walls or login popups. Students can contact hardware sellers or submit projects directly.
+                Every course directory, student project, workshop session, and competition deadline on StudentExchange is immediately browsable without signup walls or login popups. Students can join study tracks or submit projects directly.
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 p-6">
               <h2 className="font-display text-xl font-bold text-slate-900">
-                Circular Campus Hardware
+                Hands-On Bootcamps & Workshops
               </h2>
               <p className="text-sm text-slate-600 mt-3 leading-relaxed">
-                Millions of Arduino boards, ESP32 kits, sensors, and Raspberry Pi modules sit idle in dorm drawers after semester labs end. Hardware Exchange lets students buy, sell, swap, or donate components directly with peers.
+                Structured student bootcamps and weekend build clinics guide learners from core fundamentals to deployed cloud, AI, and full-stack software projects alongside peers.
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 p-6">

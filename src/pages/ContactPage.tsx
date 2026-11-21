@@ -54,14 +54,14 @@ export function ContactPage() {
         description="Get in touch with StudentExchange coordinators for partnerships, campus clubs, or platform feedback."
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="site-container grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div className="lg:col-span-5 space-y-6">
           <div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight">
               Contact StudentExchange
             </h1>
             <p className="text-base text-slate-600 mt-3 leading-relaxed">
-              Questions about listing campus hardware swap meets, partnering on student hackathons, or sharing open learning tracks? Send us a message directly.
+              Questions about hosting campus workshops and bootcamps, partnering on student hackathons, or sharing open learning tracks? Send us a message directly.
             </p>
           </div>
 

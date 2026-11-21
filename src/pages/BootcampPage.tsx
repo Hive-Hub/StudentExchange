@@ -55,14 +55,14 @@ export function BootcampPage({
       />
 
       <section className="bg-white border-b border-slate-200 py-12">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="site-container flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <p className="text-sm font-semibold text-blue-700">Structured Cohort Tracks</p>
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-950 tracking-tight mt-2">
               Student Bootcamps
             </h1>
             <p className="text-base text-slate-600 mt-2 max-w-2xl">
-              Multi-week, project-based learning cohorts designed to take students from core fundamentals to deployed full-stack, cloud, AI, and hardware prototypes.
+              Multi-week, project-based learning cohorts designed to take students from core fundamentals to deployed full-stack, cloud, AI, and software projects.
             </p>
           </div>
           <button
@@ -74,7 +74,7 @@ export function BootcampPage({
           </button>
         </div>
 
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 mt-6">
+        <div className="site-container mt-6">
           <div className="inline-flex flex-wrap gap-1.5 p-1.5 bg-slate-100 rounded-xl">
             {trackFilters.map((t) => (
               <button
@@ -94,7 +94,7 @@ export function BootcampPage({
         </div>
       </section>
 
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12">
+      <div className="site-container py-12">
         {error && <ErrorBanner message={error} onRetry={loadBootcamps} />}
         {loading ? (
           <LoadingGrid count={6} />

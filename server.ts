@@ -119,12 +119,16 @@ async function startServer() {
   });
 
   app.get('/api/stats', (_req, res) => {
-    const stats = db.prepare('SELECT * FROM platform_stats ORDER BY id ASC').all();
+    const stats = db
+      .prepare("SELECT * FROM platform_stats WHERE stat_key != 'hardware_listings' ORDER BY id ASC")
+      .all();
     res.json({ stats });
   });
 
   app.get('/api/overview', (_req, res) => {
-    const storedStats = db.prepare('SELECT * FROM platform_stats ORDER BY id ASC').all() as Array<{
+    const storedStats = db
+      .prepare("SELECT * FROM platform_stats WHERE stat_key != 'hardware_listings' ORDER BY id ASC")
+      .all() as Array<{
       id: number;
       stat_key: string;
       label: string;
@@ -140,11 +144,6 @@ async function startServer() {
         .prepare("SELECT COUNT(*) as c FROM student_projects WHERE status = 'approved'")
         .get() as { c: number }
     ).c;
-    const hardwareTotal = (
-      db
-        .prepare('SELECT COUNT(*) as c FROM hardware_listings WHERE is_available = 1')
-        .get() as { c: number }
-    ).c;
     const eventsTotal = (
       db.prepare('SELECT COUNT(*) as c FROM community_events').get() as { c: number }
     ).c;
@@ -152,7 +151,6 @@ async function startServer() {
     const liveCounts: Record<string, string> = {
       learning_resources: String(learningTotal),
       student_projects: String(projectsTotal),
-      hardware_listings: String(hardwareTotal),
       community_events: String(eventsTotal),
     };
 
@@ -169,9 +167,6 @@ async function startServer() {
         "SELECT * FROM student_projects WHERE status = 'approved' ORDER BY is_featured DESC, id ASC LIMIT 6"
       )
       .all();
-    const hardware = db
-      .prepare('SELECT * FROM hardware_listings WHERE is_available = 1 ORDER BY id ASC LIMIT 6')
-      .all();
     const competitions = db.prepare('SELECT * FROM competitions ORDER BY id ASC LIMIT 6').all();
     const awsResources = db
       .prepare('SELECT * FROM aws_learning_resources ORDER BY id ASC LIMIT 4')
@@ -182,7 +177,6 @@ async function startServer() {
       stats,
       learning,
       projects,
-      hardware,
       competitions,
       awsResources,
       events,
@@ -290,94 +284,6 @@ async function startServer() {
     res.status(201).json({
       id: info.lastInsertRowid,
       message: 'Project submitted for review. It will appear publicly once approved by an admin.',
-    });
-  });
-
-  app.get('/api/hardware', (req, res) => {
-    const listingType = String(req.query.type || '').trim();
-    const category = String(req.query.category || '').trim();
-    const q = String(req.query.q || '').trim().toLowerCase();
-
-    const clauses: string[] = ['is_available = 1'];
-    const params: string[] = [];
-
-    if (listingType && listingType !== 'All') {
-      clauses.push('listing_type = ?');
-      params.push(listingType);
-    }
-    if (category && category !== 'All') {
-      clauses.push('category = ?');
-      params.push(category);
-    }
-    if (q) {
-      clauses.push(
-        '(LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(location) LIKE ? OR LOWER(category) LIKE ?)'
-      );
-      params.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
-    }
-
-    const whereSql = `WHERE ${clauses.join(' AND ')}`;
-    const items = db
-      .prepare(`SELECT * FROM hardware_listings ${whereSql} ORDER BY id DESC`)
-      .all(...params);
-    res.json({ items });
-  });
-
-  app.get('/api/hardware/:id', (req, res) => {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      res.status(400).json({ error: 'Invalid hardware listing ID.' });
-      return;
-    }
-    const item = db.prepare('SELECT * FROM hardware_listings WHERE id = ?').get(id);
-    if (!item) {
-      res.status(404).json({ error: 'Hardware listing not found.' });
-      return;
-    }
-    res.json({ item });
-  });
-
-  app.post('/api/hardware/inquiry', (req, res) => {
-    const body = req.body as Record<string, unknown>;
-    const listingId = Number(body.listing_id);
-    const sender_name = String(body.sender_name || '').trim();
-    const sender_email = String(body.sender_email || '').trim();
-    const institution = String(body.institution || '').trim();
-    const message = String(body.message || '').trim();
-
-    if (!Number.isInteger(listingId) || listingId <= 0) {
-      res.status(400).json({ error: 'Valid listing reference is required.' });
-      return;
-    }
-    const listing = db
-      .prepare('SELECT id, title FROM hardware_listings WHERE id = ?')
-      .get(listingId) as { id: number; title: string } | undefined;
-
-    if (!listing) {
-      res.status(404).json({ error: 'Hardware listing not found.' });
-      return;
-    }
-    if (!sender_name || !isValidEmail(sender_email) || !message) {
-      res.status(400).json({ error: 'Please provide your name, a valid email, and a message.' });
-      return;
-    }
-
-    db.prepare(`
-      INSERT INTO contact_submissions
-      (submission_type, reference_id, reference_title, sender_name, sender_email, institution, subject, message, status)
-      VALUES ('hardware_inquiry', ?, ?, ?, ?, ?, ?, ?, 'new')
-    `).run(
-      listing.id,
-      listing.title,
-      sender_name.slice(0, 100),
-      sender_email.slice(0, 150),
-      institution.slice(0, 120),
-      `Hardware inquiry: ${listing.title}`.slice(0, 180),
-      message.slice(0, 1200)
-    );
-
-    res.status(201).json({
-      message: 'Your message has been recorded for the seller. No account required.',
     });
   });
 
@@ -530,10 +436,11 @@ async function startServer() {
 
   app.get('/api/admin/dashboard', requireAdmin, (_req, res) => {
     res.json({
-      stats: db.prepare('SELECT * FROM platform_stats ORDER BY id ASC').all(),
+      stats: db
+        .prepare("SELECT * FROM platform_stats WHERE stat_key != 'hardware_listings' ORDER BY id ASC")
+        .all(),
       learning: db.prepare('SELECT * FROM learning_resources ORDER BY id DESC').all(),
       projects: db.prepare('SELECT * FROM student_projects ORDER BY id DESC').all(),
-      hardware: db.prepare('SELECT * FROM hardware_listings ORDER BY id DESC').all(),
       competitions: db.prepare('SELECT * FROM competitions ORDER BY id DESC').all(),
       events: db.prepare('SELECT * FROM community_events ORDER BY id DESC').all(),
       awsResources: db.prepare('SELECT * FROM aws_learning_resources ORDER BY id DESC').all(),
@@ -612,50 +519,6 @@ async function startServer() {
 
   app.delete('/api/admin/projects/:id', requireAdmin, (req, res) => {
     db.prepare('DELETE FROM student_projects WHERE id = ?').run(Number(req.params.id));
-    res.json({ ok: true });
-  });
-
-  app.post('/api/admin/hardware', requireAdmin, (req, res) => {
-    const b = req.body as Record<string, unknown>;
-    const title = String(b.title || '').trim();
-    const category = String(b.category || 'Arduino boards').trim();
-    const listing_type = String(b.listing_type || 'Exchange').trim();
-    const condition = String(b.condition || 'Good').trim();
-    const price_label = String(b.price_label || 'Open to Swap').trim();
-    const exchange_for = String(b.exchange_for || '').trim();
-    const location = String(b.location || '').trim();
-    const seller_name = String(b.seller_name || '').trim();
-    const description = String(b.description || '').trim();
-    const specs = String(b.specs || '').trim();
-
-    if (!title || !location || !seller_name || !description) {
-      res.status(400).json({ error: 'Title, location, seller name, and description are required.' });
-      return;
-    }
-
-    const info = db
-      .prepare(`
-        INSERT INTO hardware_listings
-        (title, category, listing_type, condition, price_label, exchange_for, location, seller_name, seller_contact_note, description, specs, image_url, is_available, is_demo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', ?, ?, '/src/assets/images/hardware_kits_workbench_1795281328401.jpg', 1, 0)
-      `)
-      .run(
-        title,
-        category,
-        listing_type,
-        condition,
-        price_label,
-        exchange_for,
-        location,
-        seller_name,
-        description,
-        specs
-      );
-    res.status(201).json({ id: info.lastInsertRowid });
-  });
-
-  app.delete('/api/admin/hardware/:id', requireAdmin, (req, res) => {
-    db.prepare('DELETE FROM hardware_listings WHERE id = ?').run(Number(req.params.id));
     res.json({ ok: true });
   });
 

@@ -47,7 +47,7 @@ export function AwsBuildersPage({
 
       {/* Navy & Orange Hero */}
       <section className="bg-slate-950 text-white py-14 lg:py-20 border-b border-slate-800">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        <div className="site-container grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           <div className="lg:col-span-6 flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-orange-400">
               <Cloud className="w-4 h-4" aria-hidden="true" />
@@ -87,7 +87,7 @@ export function AwsBuildersPage({
         </div>
       </section>
 
-      <div id="aws-paths" className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-14 space-y-14">
+      <div id="aws-paths" className="site-container py-14 space-y-14">
         {error && <ErrorBanner message={error} onRetry={loadAwsData} />}
 
         <section>

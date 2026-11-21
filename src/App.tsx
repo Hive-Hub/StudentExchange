@@ -2,14 +2,11 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { ContactSellerModal } from './components/ContactSellerModal';
 import { JoinCommunityModal } from './components/JoinCommunityModal';
 import { HomePage } from './pages/HomePage';
 import { ExplorePage } from './pages/ExplorePage';
 import { LearningPage } from './pages/LearningPage';
 import { ProjectsPage } from './pages/ProjectsPage';
-import { HardwarePage } from './pages/HardwarePage';
-import { HardwareDetailPage } from './pages/HardwareDetailPage';
 import { CompetitionsPage } from './pages/CompetitionsPage';
 import { CommunityPage } from './pages/CommunityPage';
 import { AwsBuildersPage } from './pages/AwsBuildersPage';
@@ -19,7 +16,6 @@ import { PrivacyPage, TermsPage } from './pages/LegalPage';
 import { AdminPage } from './pages/AdminPage';
 import { BootcampPage } from './pages/BootcampPage';
 import { WorkshopPage } from './pages/WorkshopPage';
-import type { HardwareListing } from './types';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -50,7 +46,6 @@ function NotFoundPage() {
 }
 
 export default function App() {
-  const [contactListing, setContactListing] = useState<HardwareListing | null>(null);
   const [joinOpen, setJoinOpen] = useState(false);
   const [joinTrack, setJoinTrack] = useState<string | undefined>(undefined);
 
@@ -71,10 +66,7 @@ export default function App() {
               path="/"
               element={<HomePage onOpenJoinModal={openJoin} />}
             />
-            <Route
-              path="/explore"
-              element={<ExplorePage onContactSeller={setContactListing} />}
-            />
+            <Route path="/explore" element={<ExplorePage />} />
             <Route path="/learning" element={<LearningPage />} />
             <Route
               path="/bootcamp"
@@ -85,14 +77,6 @@ export default function App() {
               element={<WorkshopPage onOpenJoinModal={openJoin} />}
             />
             <Route path="/projects" element={<ProjectsPage />} />
-            <Route
-              path="/hardware"
-              element={<HardwarePage onContactSeller={setContactListing} />}
-            />
-            <Route
-              path="/hardware/:id"
-              element={<HardwareDetailPage onContactSeller={setContactListing} />}
-            />
             <Route path="/competitions" element={<CompetitionsPage />} />
             <Route
               path="/community"
@@ -113,10 +97,6 @@ export default function App() {
 
         <Footer />
 
-        <ContactSellerModal
-          listing={contactListing}
-          onClose={() => setContactListing(null)}
-        />
         <JoinCommunityModal
           open={joinOpen}
           initialTrack={joinTrack}

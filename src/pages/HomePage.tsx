@@ -8,7 +8,6 @@ import {
   Check,
   Clock,
   Cloud,
-  Cpu,
   ExternalLink,
   FolderGit2,
   MapPin,
@@ -61,18 +60,11 @@ const statMetaMap: Record<
     iconColor: 'text-slate-900',
     fallbackNote: 'Open-source student builds',
   },
-  hardware_listings: {
-    to: '/hardware',
-    icon: Cpu,
-    iconBg: 'bg-orange-50 border-orange-100',
-    iconColor: 'text-orange-600',
-    fallbackNote: 'Boards & kits ready to swap',
-  },
   community_events: {
     to: '/community',
     icon: CalendarDays,
-    iconBg: 'bg-blue-50 border-blue-100',
-    iconColor: 'text-blue-700',
+    iconBg: 'bg-orange-50 border-orange-100',
+    iconColor: 'text-orange-600',
     fallbackNote: 'Workshops & live sessions',
   },
 };
@@ -134,7 +126,9 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
     void loadOverview();
   }, []);
 
-  const statsList = overview?.stats?.length ? overview.stats : publicPlatformStats;
+  const statsList = (overview?.stats?.length ? overview.stats : publicPlatformStats).filter(
+    (s) => s.stat_key !== 'hardware_listings'
+  );
   const bootcampTracks = (overview?.learning || []).slice(0, 3);
   const upcomingSessions = overview?.events || [];
 
@@ -142,12 +136,12 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
     <div>
       <SeoHead
         title="Learn. Build. Exchange. Grow."
-        description="StudentExchange brings together free learning resources, student hardware exchange, structured bootcamps, hands-on workshops, and student-led technology communities."
+        description="StudentExchange brings together free learning resources, structured bootcamps, hands-on workshops, and student-led technology communities."
       />
 
       {/* Section 1: Hero */}
       <section className="bg-white border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 py-12 lg:py-18">
+        <div className="site-container py-12 lg:py-18">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center">
               <p className="text-sm font-semibold text-blue-700 tracking-tight">
@@ -160,7 +154,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
                 Your Ideas Deserve a Place to Grow.
               </h1>
               <p className="text-base sm:text-lg text-slate-700 mt-5 leading-relaxed max-w-2xl">
-                Discover free learning paths, trade unused electronics, join student bootcamps, and build with peer-led communities.
+                Discover free learning paths, join structured student bootcamps, attend hands-on workshops, and build with peer-led communities.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -172,16 +166,16 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
                 <Link
-                  to="/hardware"
+                  to="/workshop"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-900 bg-white border border-slate-300 hover:border-orange-600 hover:text-orange-700 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                 >
-                  <Cpu className="w-4 h-4" aria-hidden="true" />
-                  <span>Browse Hardware</span>
+                  <Wrench className="w-4 h-4" aria-hidden="true" />
+                  <span>Explore Workshops</span>
                 </Link>
               </div>
 
               <p className="mt-6 text-sm text-slate-700">
-                Open public access · No mandatory sign-up required to browse courses, bootcamps, or hardware listings.
+                Open public access · No mandatory sign-up required to browse courses, bootcamps, or workshops.
               </p>
             </div>
 
@@ -201,11 +195,11 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
           <div className="mt-10 pt-8 border-t border-slate-200">
             {loading ? (
               <div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+                className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5"
                 aria-busy="true"
                 aria-label="Loading platform statistics"
               >
-                {Array.from({ length: 4 }).map((_, idx) => (
+                {Array.from({ length: 3 }).map((_, idx) => (
                   <div
                     key={idx}
                     className="rounded-xl border border-slate-200 bg-slate-50 p-4 animate-pulse"
@@ -220,7 +214,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
                 {statsList.map((stat) => {
                   const meta = statMetaMap[stat.stat_key] || {
                     to: '/explore',
@@ -265,60 +259,58 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             )}
 
             {/* Concise How It Works Row */}
-            <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="shrink-0">
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+            <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-[auto_repeat(3,minmax(0,1fr))] lg:items-center gap-4 sm:gap-5">
+              <div className="sm:col-span-3 lg:col-span-1 shrink-0">
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700 whitespace-nowrap">
                   How it works
                 </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 flex-1 md:max-w-4xl">
-                <Link
-                  to="/learning"
-                  className="flex items-center gap-3 group rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-                >
-                  <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 rounded-md px-2 py-1 shrink-0">
-                    01
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-950 group-hover:text-blue-700 transition-colors flex items-center gap-1.5">
-                      <span>Learn</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" aria-hidden="true" />
-                    </p>
-                    <p className="text-sm text-slate-700 truncate">Open courses &amp; labs</p>
-                  </div>
-                </Link>
+              <Link
+                to="/learning"
+                className="flex items-center gap-3 group rounded-lg min-w-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 rounded-md px-2 py-1 shrink-0">
+                  01
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-slate-950 group-hover:text-blue-700 transition-colors flex items-center gap-1.5">
+                    <span>Learn</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" aria-hidden="true" />
+                  </p>
+                  <p className="text-sm text-slate-700 leading-snug">Open courses &amp; labs</p>
+                </div>
+              </Link>
 
-                <Link
-                  to="/bootcamp"
-                  className="flex items-center gap-3 group rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-                >
-                  <span className="font-mono text-xs font-bold text-slate-900 bg-white border border-slate-300 rounded-md px-2 py-1 shrink-0">
-                    02
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-950 group-hover:text-blue-700 transition-colors flex items-center gap-1.5">
-                      <span>Build</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" aria-hidden="true" />
-                    </p>
-                    <p className="text-sm text-slate-700 truncate">Bootcamps &amp; real projects</p>
-                  </div>
-                </Link>
+              <Link
+                to="/bootcamp"
+                className="flex items-center gap-3 group rounded-lg min-w-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                <span className="font-mono text-xs font-bold text-slate-900 bg-white border border-slate-300 rounded-md px-2 py-1 shrink-0">
+                  02
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-slate-950 group-hover:text-blue-700 transition-colors flex items-center gap-1.5">
+                    <span>Build</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" aria-hidden="true" />
+                  </p>
+                  <p className="text-sm text-slate-700 leading-snug">Bootcamps &amp; real projects</p>
+                </div>
+              </Link>
 
-                <Link
-                  to="/hardware"
-                  className="flex items-center gap-3 group rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-                >
-                  <span className="font-mono text-xs font-bold text-orange-700 bg-orange-50 border border-orange-200 rounded-md px-2 py-1 shrink-0">
-                    03
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-950 group-hover:text-orange-600 transition-colors">
-                      Exchange
-                    </p>
-                    <p className="text-sm text-slate-700 truncate">Swap spare boards &amp; kits</p>
-                  </div>
-                </Link>
-              </div>
+              <Link
+                to="/community"
+                className="flex items-center gap-3 group rounded-lg min-w-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              >
+                <span className="font-mono text-xs font-bold text-orange-700 bg-orange-50 border border-orange-200 rounded-md px-2 py-1 shrink-0">
+                  03
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-slate-950 group-hover:text-orange-600 transition-colors">
+                    Grow
+                  </p>
+                  <p className="text-sm text-slate-700 leading-snug">Connect with student chapters</p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -326,7 +318,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 2: Upcoming Events Cards */}
       <section className="py-16 lg:py-20 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -471,7 +463,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 3: Past Events & Session Recaps */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -557,7 +549,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 4: Event Formats, Bootcamps & Hosting */}
       <section className="py-16 lg:py-20 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
@@ -672,14 +664,14 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 6: Hands-On Technical Workshops */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
                 Upcoming Technical Workshops
               </h2>
               <p className="text-base text-slate-700 mt-2">
-                Practical sessions, KiCad hardware clinics, and student-led cloud labs open to every campus builder.
+                Practical sessions, cloud architecture labs, and student-led coding sprints open to every campus builder.
               </p>
             </div>
             <Link
@@ -786,7 +778,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 7: AWS Student Builder Community */}
       <section className="py-16 lg:py-20 bg-slate-950 text-white">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center">
               <div className="inline-flex items-center gap-2 text-xs font-semibold text-orange-400">
@@ -850,7 +842,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 8: How StudentExchange Works */}
       <section className="py-16 lg:py-20 bg-white border-b border-slate-200">
-        <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14">
+        <div className="site-container">
           <div className="max-w-xl">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">
               How StudentExchange Works
@@ -865,7 +857,7 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
               <p className="font-mono text-sm font-semibold text-blue-700">01.</p>
               <h3 className="font-display text-xl font-bold text-slate-900 mt-2">Learn</h3>
               <p className="text-sm text-slate-700 mt-2.5 leading-relaxed">
-                Explore open learning tracks across Python, Java, Web, Cloud, AI, and embedded hardware with zero registration walls.
+                Explore open learning tracks across Python, Java, Web, Cloud, AI, and Cybersecurity with zero registration walls.
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-7">
@@ -877,9 +869,9 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-7">
               <p className="font-mono text-sm font-semibold text-blue-700">03.</p>
-              <h3 className="font-display text-xl font-bold text-slate-900 mt-2">Exchange</h3>
+              <h3 className="font-display text-xl font-bold text-slate-900 mt-2">Grow Together</h3>
               <p className="text-sm text-slate-700 mt-2.5 leading-relaxed">
-                Trade unused microcontrollers, sensors, and lab kits with fellow students while growing with campus tech circles.
+                Connect with student chapters and the AWS Student Builder Community to ship real cloud and engineering work.
               </p>
             </div>
           </div>
@@ -888,28 +880,30 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
 
       {/* Section 9: Community CTA */}
       <section className="py-16 lg:py-20 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center">
-          <h2 className="font-display text-2xl sm:text-4xl font-bold text-slate-950 tracking-tight">
-            Don&apos;t Just Learn Technology. Build Something With It.
-          </h2>
-          <p className="text-base text-slate-700 mt-4 max-w-2xl mx-auto">
-            Pick a structured bootcamp track, swap hardware with campus peers, or join a student-led cloud circle this month.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="https://chat.whatsapp.com/HnDtAQNCmC4CyVCVv8kLnJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            >
-              Join Our Community
-            </a>
-            <Link
-              to="/hardware"
-              className="px-6 py-3 text-sm font-semibold text-slate-900 bg-white border border-slate-300 hover:border-slate-900 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-            >
-              Browse Hardware Exchange
-            </Link>
+        <div className="site-container">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="font-display text-2xl sm:text-4xl font-bold text-slate-950 tracking-tight">
+              Don&apos;t Just Learn Technology. Build Something With It.
+            </h2>
+            <p className="text-base text-slate-700 mt-4 max-w-2xl mx-auto">
+              Pick a structured bootcamp track, RSVP for an upcoming workshop, or join a student-led cloud circle this month.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <a
+                href="https://chat.whatsapp.com/HnDtAQNCmC4CyVCVv8kLnJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              >
+                Join Our Community
+              </a>
+              <Link
+                to="/workshop"
+                className="px-6 py-3 text-sm font-semibold text-slate-900 bg-white border border-slate-300 hover:border-slate-900 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                Explore Workshops
+              </Link>
+            </div>
           </div>
         </div>
       </section>
