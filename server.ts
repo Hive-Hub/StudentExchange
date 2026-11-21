@@ -90,6 +90,26 @@ async function startServer() {
   const app = express();
   app.use(express.json({ limit: '1mb' }));
 
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  app.use('/api', (req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && (allowedOrigins.includes('*') || allowedOrigins.includes(origin))) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(204);
+      return;
+    }
+    next();
+  });
+
   // ==========================================
   // PUBLIC API ROUTES (No login wall)
   // ==========================================
@@ -104,7 +124,43 @@ async function startServer() {
   });
 
   app.get('/api/overview', (_req, res) => {
-    const stats = db.prepare('SELECT * FROM platform_stats ORDER BY id ASC').all();
+    const storedStats = db.prepare('SELECT * FROM platform_stats ORDER BY id ASC').all() as Array<{
+      id: number;
+      stat_key: string;
+      label: string;
+      value: string;
+      note: string;
+      updated_at: string;
+    }>;
+    const learningTotal = (
+      db.prepare('SELECT COUNT(*) as c FROM learning_resources').get() as { c: number }
+    ).c;
+    const projectsTotal = (
+      db
+        .prepare("SELECT COUNT(*) as c FROM student_projects WHERE status = 'approved'")
+        .get() as { c: number }
+    ).c;
+    const hardwareTotal = (
+      db
+        .prepare('SELECT COUNT(*) as c FROM hardware_listings WHERE is_available = 1')
+        .get() as { c: number }
+    ).c;
+    const eventsTotal = (
+      db.prepare('SELECT COUNT(*) as c FROM community_events').get() as { c: number }
+    ).c;
+
+    const liveCounts: Record<string, string> = {
+      learning_resources: String(learningTotal),
+      student_projects: String(projectsTotal),
+      hardware_listings: String(hardwareTotal),
+      community_events: String(eventsTotal),
+    };
+
+    const stats = storedStats.map((stat) => ({
+      ...stat,
+      value: liveCounts[stat.stat_key] ?? stat.value,
+    }));
+
     const learning = db
       .prepare('SELECT * FROM learning_resources ORDER BY is_featured DESC, id ASC LIMIT 6')
       .all();

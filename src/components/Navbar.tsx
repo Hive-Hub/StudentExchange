@@ -3,42 +3,75 @@ import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
-  onOpenJoinModal: () => void;
+  onOpenJoinModal?: () => void;
 }
 
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Learning', to: '/learning' },
+  { label: 'Exchange', to: '/hardware' },
   { label: 'Bootcamp', to: '/bootcamp' },
   { label: 'Workshop', to: '/workshop' },
   { label: 'Community', to: '/community' },
   { label: 'About', to: '/about' },
 ];
 
-export function Navbar({ onOpenJoinModal }: NavbarProps) {
+export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 h-16 flex items-center justify-between gap-3 sm:gap-6">
-        {/* Zone 1: Brand Logo */}
+      <div className="max-w-[1640px] mx-auto px-5 sm:px-8 lg:px-12 xl:px-14 h-16 flex items-center justify-between gap-4">
+        {/* Zone 1: Simplified Brand Mark (Icon + Wordmark, no tagline) */}
         <Link
           to="/"
           aria-label="StudentExchange Home"
-          className="relative inline-flex items-center h-9 w-[148px] sm:h-11 sm:w-[182px] overflow-hidden shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
+          className="inline-flex items-center gap-2.5 shrink-0 rounded-md py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
         >
-          <img
-            src="/assets/aistudio/StudentExchange_Tech_Learning_Logo_ddc49316.png"
-            alt="StudentExchange — Learn. Build. Exchange. Grow."
-            referrerPolicy="no-referrer"
-            className="w-[108%] max-w-none h-auto absolute left-1/2 top-1/2 -translate-x-[50.4%] -translate-y-[46.5%] invert hue-rotate-180 saturate-125 brightness-105 contrast-105"
-          />
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 36 36"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            className="shrink-0"
+          >
+            <rect width="36" height="36" rx="9" fill="#0F172A" />
+            <path
+              d="M18 7.5L8 12.2L18 16.9L28 12.2L18 7.5Z"
+              fill="#FFFFFF"
+            />
+            <path
+              d="M26 13.4V18.2"
+              stroke="#F97316"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M12.5 21.2H22.5M22.5 21.2L19.8 18.6M22.5 21.2L19.8 23.8"
+              stroke="#FFFFFF"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M23.5 26.8H13.5M13.5 26.8L16.2 24.2M13.5 26.8L16.2 29.4"
+              stroke="#F97316"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="font-display text-xl font-extrabold tracking-tight text-slate-950 whitespace-nowrap">
+            Student<span className="text-orange-600">Exchange</span>
+          </span>
         </Link>
 
-        {/* Zone 2: Single-line Primary Navigation */}
+        {/* Zone 2: Primary Navigation */}
         <nav
           aria-label="Primary Navigation"
-          className="hidden xl:flex items-center gap-6 text-sm font-medium text-slate-600"
+          className="hidden lg:flex items-center gap-5 xl:gap-7 text-sm font-medium text-slate-700"
         >
           {navItems.map((item) => (
             <NavLink
@@ -48,8 +81,8 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
               className={({ isActive }) =>
                 `whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700 ${
                   isActive
-                    ? 'text-slate-900 border-blue-700 font-semibold'
-                    : 'text-slate-600 border-transparent hover:text-slate-900 hover:border-slate-300'
+                    ? 'text-slate-950 border-blue-700 font-semibold'
+                    : 'text-slate-700 border-transparent hover:text-slate-950 hover:border-slate-300'
                 }`
               }
             >
@@ -59,7 +92,7 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
         </nav>
 
         {/* Zone 3: Right Actions */}
-        <div className="hidden xl:flex items-center gap-4 shrink-0">
+        <div className="hidden lg:flex items-center gap-4 shrink-0">
           <a
             href="https://chat.whatsapp.com/HnDtAQNCmC4CyVCVv8kLnJ"
             target="_blank"
@@ -70,13 +103,13 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
           </a>
         </div>
 
-        {/* Mobile Menu Trigger */}
-        <div className="flex xl:hidden items-center gap-3 shrink-0">
+        {/* Mobile / Tablet Menu Trigger */}
+        <div className="flex lg:hidden items-center gap-2.5 shrink-0">
           <a
             href="https://chat.whatsapp.com/HnDtAQNCmC4CyVCVv8kLnJ"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-orange-600 rounded-lg transition-colors whitespace-nowrap shrink-0"
+            className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-orange-600 rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             Join Community
           </a>
@@ -85,16 +118,16 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
             onClick={() => setMobileOpen((prev) => !prev)}
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            className="p-2.5 text-slate-700 hover:text-slate-900 rounded-lg border border-slate-200 cursor-pointer"
+            className="p-2.5 text-slate-700 hover:text-slate-950 rounded-lg border border-slate-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      {/* Responsive Drawer */}
+      {/* Responsive Mobile Drawer */}
       {mobileOpen && (
-        <div className="xl:hidden border-t border-slate-200 bg-white px-4 py-4">
+        <div className="lg:hidden border-t border-slate-200 bg-white px-5 py-4">
           <nav aria-label="Mobile Navigation" className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {navItems.map((item) => (
               <NavLink
@@ -103,7 +136,7 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
                 end={item.to === '/'}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
-                  `px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                  `px-3 py-2.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${
                     isActive
                       ? 'bg-slate-900 text-white'
                       : 'text-slate-700 hover:bg-slate-100'
@@ -120,14 +153,14 @@ export function Navbar({ onOpenJoinModal }: NavbarProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="px-4 py-2.5 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors"
+              className="px-4 py-2.5 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
             >
               Join Community
             </a>
             <Link
               to="/aws-builders"
               onClick={() => setMobileOpen(false)}
-              className="px-4 py-2.5 text-sm font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50"
+              className="px-4 py-2.5 text-sm font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             >
               AWS Student Builders
             </Link>

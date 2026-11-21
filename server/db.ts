@@ -169,10 +169,21 @@ function seedInitialDemoData(): void {
     const insertStat = db.prepare(
       'INSERT INTO platform_stats (stat_key, label, value, note) VALUES (?, ?, ?, ?)'
     );
-    insertStat.run('learning_resources', 'Learning Resources', '140+', 'Demo catalog count · Editable in Admin');
-    insertStat.run('student_projects', 'Student Projects', '85+', 'Demo showcase count · Editable in Admin');
-    insertStat.run('hardware_listings', 'Hardware Listings', '64', 'Demo exchange boards · Editable in Admin');
-    insertStat.run('community_events', 'Community Events', '28', 'Demo student-led sessions · Editable in Admin');
+    insertStat.run('learning_resources', 'Learning Resources', '9', 'Free courses & open tracks');
+    insertStat.run('student_projects', 'Student Projects', '5', 'Open-source student builds');
+    insertStat.run('hardware_listings', 'Hardware Listings', '6', 'Boards & kits ready to swap');
+    insertStat.run('community_events', 'Community Events', '7', 'Workshops & live sessions');
+  } else {
+    db.exec(`
+      UPDATE platform_stats SET note = 'Free courses & open tracks'
+        WHERE stat_key = 'learning_resources' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
+      UPDATE platform_stats SET note = 'Open-source student builds'
+        WHERE stat_key = 'student_projects' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
+      UPDATE platform_stats SET note = 'Boards & kits ready to swap'
+        WHERE stat_key = 'hardware_listings' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
+      UPDATE platform_stats SET note = 'Workshops & live sessions'
+        WHERE stat_key = 'community_events' AND (note LIKE '%Demo%' OR note LIKE '%Editable%');
+    `);
   }
 
   const learningCount = db.prepare('SELECT COUNT(*) as c FROM learning_resources').get() as { c: number };
