@@ -3,6 +3,7 @@ import type {
   Competition,
   LearningResource,
   PlatformStat,
+  StudentProject,
 } from '../types';
 
 export const publicLearningHighlights: LearningResource[] = [
@@ -238,5 +239,59 @@ export const publicPlatformStats: PlatformStat[] = [
     value: '7',
     note: 'Workshops & live sessions',
     updated_at: '2026-11-21T00:00:00Z',
+  },
+];
+
+export const publicStudentProjects: StudentProject[] = [
+  {
+    id: 1,
+    title: 'Campus Study Room Occupancy Tracker',
+    category: 'IoT',
+    description:
+      'Low-power sensor telemetry and live web dashboard showing real-time library seating availability across campus floors.',
+    tech_stack: 'TypeScript · React · MQTT · Node.js',
+    author_name: 'Aarav Patel',
+    university: 'Partner Engineering Chapter',
+    github_url: 'https://github.com/',
+    demo_url: 'https://react.dev/learn',
+    image_url: '/src/assets/images/project_iot_robotics_1795281329280.jpg',
+    status: 'approved',
+    is_featured: 1,
+    is_demo: 0,
+    created_at: '2026-10-15T00:00:00Z',
+  },
+  {
+    id: 2,
+    title: 'Serverless Syllabus & Lab Companion',
+    category: 'Cloud',
+    description:
+      'Open-source study tracker organizing cloud labs, weekly coding sprints, and peer feedback checklists for student cohorts.',
+    tech_stack: 'AWS Lambda · DynamoDB · React · Tailwind CSS',
+    author_name: 'Meera Nair',
+    university: 'Cloud Builders Guild',
+    github_url: 'https://github.com/',
+    demo_url: 'https://explore.skillbuilder.aws/',
+    image_url: '/src/assets/images/aws_cloud_builders_1795281329492.jpg',
+    status: 'approved',
+    is_featured: 1,
+    is_demo: 0,
+    created_at: '2026-10-20T00:00:00Z',
+  },
+  {
+    id: 3,
+    title: 'Accessible Lecture Transcript Summarizer',
+    category: 'AI/ML',
+    description:
+      'Student-built study helper generating structured topic outlines and flashcards from open computer science lecture notes.',
+    tech_stack: 'Python · FastAPI · TypeScript · Vite',
+    author_name: 'Rohan Sharma',
+    university: 'Open AI Circle',
+    github_url: 'https://github.com/',
+    demo_url: 'https://docs.python.org/3/tutorial/',
+    image_url: '/src/assets/images/learning_cloud_code_1795281329282.jpg',
+    status: 'approved',
+    is_featured: 1,
+    is_demo: 0,
+    created_at: '2026-10-25T00:00:00Z',
   },
 ];

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { CompetitionCard } from '../components/ResourceCards';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { publicWorkshopCompetitions } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { Competition } from '../types';
 
 const competitionTypes = [
@@ -20,24 +22,30 @@ export function CompetitionsPage() {
   const [selectedType, setSelectedType] = useState('All');
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function fetchCompetitions() {
     setLoading(true);
-    setError('');
-    try {
-      const params = new URLSearchParams();
-      if (selectedType !== 'All') params.set('type', selectedType);
-      if (query.trim()) params.set('q', query.trim());
-      const res = await fetch(`/api/competitions?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to load competitions.');
-      const data = (await res.json()) as { items: Competition[] };
-      setItems(data.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to fetch competitions.');
-    } finally {
-      setLoading(false);
-    }
+    const params = new URLSearchParams();
+    if (selectedType !== 'All') params.set('type', selectedType);
+    if (query.trim()) params.set('q', query.trim());
+
+    const qLower = query.trim().toLowerCase();
+    const filteredFallback = publicWorkshopCompetitions.filter((item) => {
+      const typeOk = selectedType === 'All' || item.type === selectedType;
+      const qOk =
+        !qLower ||
+        item.title.toLowerCase().includes(qLower) ||
+        item.organizer.toLowerCase().includes(qLower) ||
+        item.description.toLowerCase().includes(qLower);
+      return typeOk && qOk;
+    });
+
+    const { data } = await fetchApiJsonWithFallback<{ items: Competition[] }>(
+      `/api/competitions?${params.toString()}`,
+      { items: filteredFallback }
+    );
+    setItems(data.items);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -110,7 +118,6 @@ export function CompetitionsPage() {
       </section>
 
       <div className="site-container py-12">
-        {error && <ErrorBanner message={error} onRetry={fetchCompetitions} />}
         {loading ? (
           <LoadingGrid count={6} />
         ) : items.length === 0 ? (

@@ -2,7 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Plus, Search, X, CheckCircle2 } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { ProjectCard } from '../components/ResourceCards';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import { publicStudentProjects } from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type { StudentProject } from '../types';
 
 const projectCategories = ['All', 'AI/ML', 'IoT', 'Web Development', 'Mobile Apps', 'Cloud'];
@@ -12,7 +14,6 @@ export function ProjectsPage() {
   const [category, setCategory] = useState('All');
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const [submitOpen, setSubmitOpen] = useState(false);
   const [formState, setFormState] = useState({
@@ -31,20 +32,27 @@ export function ProjectsPage() {
 
   async function fetchProjects() {
     setLoading(true);
-    setError('');
-    try {
-      const params = new URLSearchParams();
-      if (category !== 'All') params.set('category', category);
-      if (query.trim()) params.set('q', query.trim());
-      const res = await fetch(`/api/projects?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to load student projects.');
-      const data = (await res.json()) as { items: StudentProject[] };
-      setItems(data.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to fetch projects.');
-    } finally {
-      setLoading(false);
-    }
+    const params = new URLSearchParams();
+    if (category !== 'All') params.set('category', category);
+    if (query.trim()) params.set('q', query.trim());
+
+    const qLower = query.trim().toLowerCase();
+    const filteredFallback = publicStudentProjects.filter((item) => {
+      const catOk = category === 'All' || item.category === category;
+      const qOk =
+        !qLower ||
+        item.title.toLowerCase().includes(qLower) ||
+        item.tech_stack.toLowerCase().includes(qLower) ||
+        item.description.toLowerCase().includes(qLower);
+      return catOk && qOk;
+    });
+
+    const { data } = await fetchApiJsonWithFallback<{ items: StudentProject[] }>(
+      `/api/projects?${params.toString()}`,
+      { items: filteredFallback }
+    );
+    setItems(data.items);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -168,7 +176,6 @@ export function ProjectsPage() {
       </section>
 
       <div className="site-container py-12">
-        {error && <ErrorBanner message={error} onRetry={fetchProjects} />}
         {loading ? (
           <LoadingGrid count={6} />
         ) : items.length === 0 ? (

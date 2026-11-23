@@ -7,7 +7,13 @@ import {
   LearningCard,
   ProjectCard,
 } from '../components/ResourceCards';
-import { EmptyState, ErrorBanner, LoadingGrid } from '../components/StateFeedback';
+import { EmptyState, LoadingGrid } from '../components/StateFeedback';
+import {
+  publicLearningHighlights,
+  publicStudentProjects,
+  publicWorkshopCompetitions,
+} from '../data/fallbackCatalog';
+import { fetchApiJsonWithFallback } from '../lib/api';
 import type {
   Competition,
   LearningResource,
@@ -23,33 +29,25 @@ export function ExplorePage() {
   const [projects, setProjects] = useState<StudentProject[]>([]);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   async function loadAll() {
     setLoading(true);
-    setError('');
-    try {
-      const [lRes, pRes, cRes] = await Promise.all([
-        fetch('/api/learning'),
-        fetch('/api/projects'),
-        fetch('/api/competitions'),
-      ]);
-      if (!lRes.ok || !pRes.ok || !cRes.ok) {
-        throw new Error('Failed to load directory items.');
-      }
-      const [lData, pData, cData] = await Promise.all([
-        lRes.json() as Promise<{ items: LearningResource[] }>,
-        pRes.json() as Promise<{ items: StudentProject[] }>,
-        cRes.json() as Promise<{ items: Competition[] }>,
-      ]);
-      setLearning(lData.items);
-      setProjects(pData.items);
-      setCompetitions(cData.items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to fetch resources.');
-    } finally {
-      setLoading(false);
-    }
+    const [lResult, pResult, cResult] = await Promise.all([
+      fetchApiJsonWithFallback<{ items: LearningResource[] }>('/api/learning', {
+        items: publicLearningHighlights,
+      }),
+      fetchApiJsonWithFallback<{ items: StudentProject[] }>('/api/projects', {
+        items: publicStudentProjects,
+      }),
+      fetchApiJsonWithFallback<{ items: Competition[] }>('/api/competitions', {
+        items: publicWorkshopCompetitions,
+      }),
+    ]);
+
+    setLearning(lResult.data.items);
+    setProjects(pResult.data.items);
+    setCompetitions(cResult.data.items);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -154,7 +152,6 @@ export function ExplorePage() {
       </section>
 
       <div className="site-container py-12 space-y-14">
-        {error && <ErrorBanner message={error} onRetry={loadAll} />}
         {loading ? (
           <LoadingGrid count={6} />
         ) : totalMatches === 0 ? (

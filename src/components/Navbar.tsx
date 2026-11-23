@@ -63,7 +63,7 @@ export function Navbar({ onOpenJoinModal: _onOpenJoinModal }: NavbarProps) {
             />
           </svg>
           <span className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 whitespace-nowrap">
-            Student<span className="text-orange-600">Exchange</span>
+            Student<span className="text-[#C2410C]">Exchange</span>
           </span>
         </Link>
 
