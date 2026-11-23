@@ -14,8 +14,6 @@ import {
   ShieldAlert,
   Wrench,
 } from 'lucide-react';
-import { Hero } from '../components/Hero';
-import { ScrollReveal } from '../components/ScrollReveal';
 import { SeoHead } from '../components/SeoHead';
 import { EmptyState, LoadingGrid } from '../components/StateFeedback';
 import {
@@ -41,6 +39,51 @@ interface OverviewResponse {
 
 interface HomePageProps {
   onOpenJoinModal: (track?: string) => void;
+}
+
+const statMetaMap: Record<
+  string,
+  {
+    to: string;
+    icon: typeof BookOpen;
+    iconBg: string;
+    iconColor: string;
+    hoverBorder: string;
+    fallbackNote: string;
+  }
+> = {
+  learning_resources: {
+    to: '/learning',
+    icon: BookOpen,
+    iconBg: 'bg-[var(--color-tint-blue)] border-blue-200',
+    iconColor: 'text-[var(--color-blue)]',
+    hoverBorder: 'hover:border-[var(--color-blue)]',
+    fallbackNote: 'Free courses & open tracks',
+  },
+  student_projects: {
+    to: '/projects',
+    icon: FolderGit2,
+    iconBg: 'bg-[var(--color-tint-violet)] border-violet-200',
+    iconColor: 'text-[var(--color-violet)]',
+    hoverBorder: 'hover:border-[var(--color-violet)]',
+    fallbackNote: 'Open-source student builds',
+  },
+  community_events: {
+    to: '/community',
+    icon: CalendarDays,
+    iconBg: 'bg-[var(--color-tint-teal)] border-teal-200',
+    iconColor: 'text-[var(--color-teal-text)]',
+    hoverBorder: 'hover:border-[var(--color-teal)]',
+    fallbackNote: 'Workshops & live sessions',
+  },
+};
+
+function sanitizeStatNote(note: string, statKey: string): string {
+  const lower = note.toLowerCase();
+  if (!note || lower.includes('demo') || lower.includes('editable')) {
+    return statMetaMap[statKey]?.fallbackNote || 'Updated across StudentExchange';
+  }
+  return note;
 }
 
 const fallbackOverviewPayload: OverviewResponse = {
@@ -95,7 +138,9 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
     void loadOverview();
   }, []);
 
-  const statsList = overview?.stats?.length ? overview.stats : publicPlatformStats;
+  const statsList = (overview?.stats?.length ? overview.stats : publicPlatformStats).filter(
+    (s) => s.stat_key !== 'hardware_listings'
+  );
   const bootcampTracks = (overview?.learning || []).slice(0, 3);
   const allEvents = overview?.events || [];
 
@@ -129,12 +174,131 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
         description="StudentExchange brings together free learning resources, structured bootcamps, hands-on workshops, and student-led technology communities."
       />
 
-      {/* Section 1: Interactive Dark Hero (3D Microcontroller Cluster + Glass Stat Cards) */}
-      <Hero stats={statsList} loading={loading} />
+      {/* Section 1: Hero & Platform Statistics (White) */}
+      <section className="bg-white border-b border-[var(--color-border)]">
+        <div className="site-container py-12 lg:py-18">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <p className="text-sm font-semibold text-[var(--color-blue)] tracking-tight">
+                Free for students · Open to all
+              </p>
+              <h1
+                className="font-display font-extrabold text-[var(--color-navy)] tracking-tight mt-3 max-w-2xl leading-[1.08]"
+                style={{ fontSize: 'clamp(2.25rem, 4vw, 3.65rem)' }}
+              >
+                Your Ideas Deserve a Place to Grow.
+              </h1>
+              <p className="text-base sm:text-lg text-[var(--color-text)] mt-5 leading-relaxed max-w-2xl">
+                Discover free learning paths, join structured student bootcamps, attend hands-on workshops, and build with peer-led communities.
+              </p>
 
-      {/* Section 2: Upcoming Events & Live Sessions (Soft BG - Cyan/Teal coded for Events) */}
-      <section className="py-16 lg:py-20 bg-[var(--bg)] border-b border-[var(--border)]">
-        <ScrollReveal>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/learning"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-[var(--color-navy)] hover:bg-[var(--color-blue)] rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue)]"
+                >
+                  <span>Explore Learning</span>
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  to="/workshop"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[var(--color-navy)] bg-white border border-[var(--color-border)] hover:border-[var(--color-orange)] hover:text-[var(--color-orange-text)] rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+                >
+                  <Wrench className="w-4 h-4 text-[var(--color-orange-text)]" aria-hidden="true" />
+                  <span>Explore Workshops</span>
+                </Link>
+              </div>
+
+              <p className="mt-6 text-sm text-[var(--color-muted)]">
+                Open public access · No mandatory sign-up required to browse courses, bootcamps, or workshops.
+              </p>
+            </div>
+
+            <div className="lg:col-span-6 flex">
+              <div className="w-full rounded-2xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-soft)]">
+                <img
+                  src="/src/assets/images/hero_student_makers_1795281326782.jpg"
+                  alt="Engineering students collaborating with laptops, microcontroller boards, robotics, and cloud diagrams"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover min-h-[260px] lg:min-h-[420px]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Platform Statistics */}
+          <div className="mt-10 pt-8 border-t border-[var(--color-border)]">
+            {loading ? (
+              <div
+                className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5"
+                aria-busy="true"
+                aria-label="Loading platform statistics"
+              >
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-soft)] p-4 animate-pulse"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="h-8 w-16 bg-slate-200 rounded" />
+                      <div className="h-9 w-9 bg-slate-200 rounded-lg" />
+                    </div>
+                    <div className="h-4 w-32 bg-slate-200 rounded mt-3" />
+                    <div className="h-3.5 w-40 bg-slate-100 rounded mt-2" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                {statsList.map((stat) => {
+                  const meta = statMetaMap[stat.stat_key] || {
+                    to: '/explore',
+                    icon: BookOpen,
+                    iconBg: 'bg-[var(--color-tint-blue)] border-blue-200',
+                    iconColor: 'text-[var(--color-blue)]',
+                    hoverBorder: 'hover:border-[var(--color-blue)]',
+                    fallbackNote: 'Explore resources',
+                  };
+                  const IconComponent = meta.icon;
+
+                  return (
+                    <Link
+                      key={stat.stat_key}
+                      to={meta.to}
+                      className={`group rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-soft)] p-4 hover:-translate-y-0.5 hover:shadow-md ${meta.hoverBorder} hover:bg-white transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue)]`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="font-display text-3xl font-bold text-[var(--color-navy)] tabular-nums">
+                          {stat.value}
+                        </p>
+                        <span
+                          className={`w-9 h-9 rounded-lg border inline-flex items-center justify-center shrink-0 ${meta.iconBg} ${meta.iconColor}`}
+                          aria-hidden="true"
+                        >
+                          <IconComponent className="w-4 h-4" />
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-[var(--color-navy)] mt-2.5 flex items-center justify-between gap-2">
+                        <span>{stat.label}</span>
+                        <ArrowRight
+                          className="w-3.5 h-3.5 text-[var(--color-muted)] group-hover:text-[var(--color-navy)] group-hover:translate-x-0.5 transition-all"
+                          aria-hidden="true"
+                        />
+                      </p>
+                      <p className="text-sm text-[var(--color-text)] mt-1">
+                        {sanitizeStatNote(stat.note, stat.stat_key)}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Upcoming Events & Live Sessions (Soft BG - Teal coded for Events) */}
+      <section className="py-16 lg:py-20 bg-[var(--color-bg-soft)] border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -266,12 +430,10 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             )}
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 3: Past Events & Session Recaps (White - Teal coded for Events) */}
-      <section className="py-16 lg:py-20 bg-white border-b border-[var(--border)]">
-        <ScrollReveal>
+      <section className="py-16 lg:py-20 bg-white border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -363,12 +525,10 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             )}
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 4: Bootcamps, Tracks & Hosting (Soft BG - Learning=Blue, Projects=Violet, Exchange=Orange) */}
-      <section className="py-16 lg:py-20 bg-[var(--bg)] border-b border-[var(--border)]">
-        <ScrollReveal>
+      <section className="py-16 lg:py-20 bg-[var(--color-bg-soft)] border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -501,12 +661,10 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             </Link>
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 5: Exchange & Technical Workshops (White - Orange coded for Exchange) */}
-      <section className="py-16 lg:py-20 bg-white border-b border-[var(--border)]">
-        <ScrollReveal>
+      <section className="py-16 lg:py-20 bg-white border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -632,12 +790,10 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             )}
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 6: AWS Student Builder Community (Soft BG, site palette, vertically centered image, below Exchange/Workshops) */}
-      <section className="py-16 lg:py-20 bg-[var(--bg)] border-b border-[var(--border)]">
-        <ScrollReveal>
+      <section className="py-16 lg:py-20 bg-[var(--color-bg-soft)] border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-6 flex flex-col justify-center">
@@ -705,12 +861,10 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             </div>
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 7: How StudentExchange Works — Learn -> Build -> Exchange -> Grow (White) */}
-      <section className="py-16 lg:py-20 bg-white border-b border-[var(--border)]">
-        <ScrollReveal>
+      <section className="py-16 lg:py-20 bg-white border-b border-[var(--color-border)]">
         <div className="site-container">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-blue)]">
@@ -774,7 +928,6 @@ export function HomePage({ onOpenJoinModal }: HomePageProps) {
             </div>
           </div>
         </div>
-        </ScrollReveal>
       </section>
 
       {/* Section 8: Final Community CTA (Navy #0F172A to #1E3A8A gradient band, white text, orange primary button) */}
